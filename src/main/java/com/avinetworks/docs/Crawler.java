@@ -29,9 +29,9 @@ public class Crawler extends WebCrawler {
   //private static final String HOSTNAME = "kbdev.avinetworks.com";
   private Filter filter;
 
-  Crawler(final Filter filter) {
+  Crawler(final Filter filter, final File outputDir) {
     this.filter = filter;
-    outputDir = new File("/tmp/avi-docs/src/site/");
+    this.outputDir = outputDir;
     try {
       FileUtils.forceMkdir(outputDir);
     } catch (IOException e) {
@@ -56,8 +56,10 @@ public class Crawler extends WebCrawler {
       final String contentType = page.getContentType();
       info("  content type: " + contentType);
       if (contentType.contains("html")) {
-        info("  converting content to string....");
+        info("  converting content to string with charset: " + page.getContentCharset());
         String content = new String(page.getContentData(), page.getContentCharset());
+        info("  received content.");
+
 
         final Document doc = Jsoup.parse(content);
         Elements titleElement = doc.select("h1.faq-title");
@@ -94,6 +96,7 @@ public class Crawler extends WebCrawler {
         out.print(markdown);
         out.flush();
         out.close();
+        info("  done snarfing.");
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -161,10 +164,11 @@ public class Crawler extends WebCrawler {
          * Start the crawl. This is a blocking operation, meaning that your code
          * will reach the line after this only when crawling is finished.
          */
+    final File outputDir = new File("/tmp/avi-docs/src/site/");
 
     controller.start(new CrawlController.WebCrawlerFactory<Crawler>() {
                        public Crawler newInstance() throws Exception {
-                         return new Crawler(new HostFilter(HOSTNAME));
+                         return new Crawler(new HostFilter(HOSTNAME), outputDir);
                        }
                      },
         numberOfCrawlers);
