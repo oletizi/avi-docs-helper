@@ -25,6 +25,7 @@ import java.net.URL;
 public class Crawler extends WebCrawler {
   //private final String outputDir = "/tmp/doc2md";
   private final File outputDir;
+  public static final String HOSTNAME = "kbdev.avinetworks.com";
 
   public Crawler() {
     outputDir = new File("/tmp/avi-docs/src/site/");
@@ -39,12 +40,17 @@ public class Crawler extends WebCrawler {
   public boolean shouldVisit(final Page referringPage, final WebURL url) {
     // info("shouldVisit: referringPage: " + referringPage + ", url: " + url);
     String href = url.getURL().toLowerCase();
-    return href.contains("https://kb.avinetworks.com/")
-        && !href.contains("kb.avinetworks.com/wp-content/")
-        && !href.contains("kb.avinetworks.com/wp-json/")
-        && !href.contains("kb.avinetworks.com/tag/")
-        && !href.contains("kb.avinetworks.com/author/")
-        && !href.contains("kb.avinetworks.com/category/")
+
+    return href.contains("https://" + HOSTNAME + "/")
+        && !href.contains(HOSTNAME + "/wp-content/")
+        && !href.contains(HOSTNAME + "/wp-json/")
+        && !href.contains(HOSTNAME + "/tag/")
+        && !href.contains(HOSTNAME + "/author/")
+        && !href.contains(HOSTNAME + "/category/")
+        && !href.endsWith(".png")
+        && !href.endsWith(".gif")
+        && !href.endsWith(".jpg")
+        && !href.endsWith(".jpeg")
         ;
   }
 
@@ -88,7 +94,7 @@ public class Crawler extends WebCrawler {
 
         final String markdown = HTML2Md.convert(article.outerHtml(), "/");
         final File outfile = new File(outDir, "index.md");
-        info("Writing content to file: " + outfile);
+        info("  Writing content to file: " + outfile);
         final PrintWriter out = new PrintWriter(new FileWriter(outfile));
         out.println("---");
         out.println("title: " + title);
@@ -140,7 +146,7 @@ public class Crawler extends WebCrawler {
 
   public static void main(String[] args) throws Exception {
     String crawlStorageFolder = "/tmp/crawler/";
-    int numberOfCrawlers = 1;
+    int numberOfCrawlers = 10;
 
     CrawlConfig config = new CrawlConfig();
     config.setCrawlStorageFolder(crawlStorageFolder);
@@ -158,7 +164,7 @@ public class Crawler extends WebCrawler {
          * URLs that are fetched and then the crawler starts following links
          * which are found in these pages
          */
-    controller.addSeed("https://kb.avinetworks.com/");
+    controller.addSeed("https://" + HOSTNAME + "/");
 
         /*
          * Start the crawl. This is a blocking operation, meaning that your code
