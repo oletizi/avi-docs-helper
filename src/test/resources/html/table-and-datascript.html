@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Custom Persistence with DataScript | Avi KB</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href="/static/app/images/favicon_v2.ico" />
+  <link rel="alternate" type="application/rss+xml" title="Avi KB &raquo; Feed" href="/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Avi KB &raquo; Comments Feed" href="/comments/feed/" />
+<link rel="alternate" type="application/rss+xml" title="Avi KB &raquo; Custom Persistence with DataScript Comments Feed" href="/custom-persistence-with-datascript/feed/" />
+		<script type="text/javascript">
+			window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/72x72\/","ext":".png","source":{"concatemoji":"http:\/\/kb.avinetworks.com\/wp-includes\/js\/wp-emoji-release.min.js?ver=4.5.3"}};
+			!function(a,b,c){function d(a){var c,d,e,f=b.createElement("canvas"),g=f.getContext&&f.getContext("2d"),h=String.fromCharCode;if(!g||!g.fillText)return!1;switch(g.textBaseline="top",g.font="600 32px Arial",a){case"flag":return g.fillText(h(55356,56806,55356,56826),0,0),f.toDataURL().length>3e3;case"diversity":return g.fillText(h(55356,57221),0,0),c=g.getImageData(16,16,1,1).data,d=c[0]+","+c[1]+","+c[2]+","+c[3],g.fillText(h(55356,57221,55356,57343),0,0),c=g.getImageData(16,16,1,1).data,e=c[0]+","+c[1]+","+c[2]+","+c[3],d!==e;case"simple":return g.fillText(h(55357,56835),0,0),0!==g.getImageData(16,16,1,1).data[0];case"unicode8":return g.fillText(h(55356,57135),0,0),0!==g.getImageData(16,16,1,1).data[0]}return!1}function e(a){var c=b.createElement("script");c.src=a,c.type="text/javascript",b.getElementsByTagName("head")[0].appendChild(c)}var f,g,h,i;for(i=Array("simple","flag","unicode8","diversity"),c.supports={everything:!0,everythingExceptFlag:!0},h=0;h<i.length;h++)c.supports[i[h]]=d(i[h]),c.supports.everything=c.supports.everything&&c.supports[i[h]],"flag"!==i[h]&&(c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&c.supports[i[h]]);c.supports.everythingExceptFlag=c.supports.everythingExceptFlag&&!c.supports.flag,c.DOMReady=!1,c.readyCallback=function(){c.DOMReady=!0},c.supports.everything||(g=function(){c.readyCallback()},b.addEventListener?(b.addEventListener("DOMContentLoaded",g,!1),a.addEventListener("load",g,!1)):(a.attachEvent("onload",g),b.attachEvent("onreadystatechange",function(){"complete"===b.readyState&&c.readyCallback()})),f=c.source||{},f.concatemoji?e(f.concatemoji):f.wpemoji&&f.twemoji&&(e(f.twemoji),e(f.wpemoji)))}(window,document,window._wpemojiSettings);
+		</script>
+		<style type="text/css">
+img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 .07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}
+</style>
+<link rel='stylesheet' id='crayon-css'  href='/wp-content/plugins/crayon-syntax-highlighter/css/min/crayon.min.css?ver=2.7.1' type='text/css' media='all' />
+<link rel='stylesheet' id='crayon-theme-classic-css'  href='/wp-content/plugins/crayon-syntax-highlighter/themes/classic/classic.css?ver=2.7.1' type='text/css' media='all' />
+<link rel='stylesheet' id='crayon-font-monaco-css'  href='/wp-content/plugins/crayon-syntax-highlighter/fonts/monaco.css?ver=2.7.1' type='text/css' media='all' />
+<link rel='stylesheet' id='collapseomatic-css-css'  href='/wp-content/plugins/collapse-pro-matic/light_style.css?ver=1.5.3' type='text/css' media='all' />
+<link rel='stylesheet' id='toc-screen-css'  href='/wp-content/plugins/table-of-contents-plus/screen.min.css?ver=1509' type='text/css' media='all' />
+<link rel='stylesheet' id='prismCSS-css'  href='/wp-content/themes/faq/css/prism.css?ver=4.5.3' type='text/css' media='all' />
+<link rel='stylesheet' id='algolia-autocomplete-css'  href='/wp-content/plugins/algolia/includes/../public/css/algolia-autocomplete.css?ver=0.2.8' type='text/css' media='screen' />
+<link rel='stylesheet' id='faq_main-css'  href='/wp-content/themes/faq/assets/css/main.min.css?ver=1459990661' type='text/css' media='all' />
+<link rel='stylesheet' id='faq_fontawesome-css'  href='/wp-content/themes/faq/assets/css/font-awesome.min.css?ver=4.0.3' type='text/css' media='all' />
+<link rel='stylesheet' id='faq_style-css'  href='/wp-content/themes/faq/style.css?ver=4.5.3' type='text/css' media='all' />
+<script type='text/javascript' src='/wp-includes/js/jquery/jquery.js?ver=1.12.4'></script>
+<script type='text/javascript' src='/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var CrayonSyntaxSettings = {"version":"2.7.1","is_admin":"0","ajaxurl":"https:\/\/kb.avinetworks.com\/wp-admin\/admin-ajax.php","prefix":"crayon-","setting":"crayon-setting","selected":"crayon-setting-selected","changed":"crayon-setting-changed","special":"crayon-setting-special","orig_value":"data-orig-value","debug":""};
+var CrayonSyntaxStrings = {"copy":"Press %s to Copy, %s to Paste","minimize":"Click To Expand Code"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='/wp-content/plugins/crayon-syntax-highlighter/js/min/crayon.min.js?ver=2.7.1'></script>
+<script type='text/javascript' src='/wp-content/themes/faq/js/prism.js?ver=4.5.3'></script>
+<script type='text/javascript' src='/wp-content/plugins/algolia/includes/../public/js/autocomplete.min.js?ver=0.2.8'></script>
+<script type='text/javascript' src='/wp-content/plugins/algolia/includes/../public/js/algoliasearch.jquery.min.js?ver=0.2.8'></script>
+<script type='text/javascript' src='/wp-includes/js/underscore.min.js?ver=1.8.3'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var _wpUtilSettings = {"ajax":{"url":"\/wp-admin\/admin-ajax.php"}};
+/* ]]> */
+</script>
+<script type='text/javascript' src='/wp-includes/js/wp-util.min.js?ver=4.5.3'></script>
+<script type='text/javascript' src='/wp-content/plugins/algolia/includes/../public/js/algolia-public-autocomplete.js?ver=0.2.8'></script>
+<script type='text/javascript' src='/wp-content/plugins/algolia/includes/../public/js/tether.min.js?ver=0.2.8'></script>
+<script type='text/javascript' src='/wp-content/themes/faq/assets/js/vendor/modernizr-2.7.0.min.js'></script>
+<script type='text/javascript' src='/wp-content/themes/faq/assets/js/scripts.min.js?ver=4c66da3ec00dd0e471a48d7551a0d5e9'></script>
+<script type='text/javascript' src='/wp-content/themes/faq/assets/js/_main.js?ver=4.5.3'></script>
+<link rel='https://api.w.org/' href='https://kb.avinetworks.com/wp-json/' />
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="/xmlrpc.php?rsd" />
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="/wp-includes/wlwmanifest.xml" /> 
+<link rel='prev' title='Terms of Avi Vantage Software License' href='https://kb.avinetworks.com/terms-of-avi-vantage-license/' />
+<link rel='next' title='Mesos - Graceful App Migration in DC/OS Cluster' href='https://kb.avinetworks.com/mesos-graceful-app-migration-in-dcos-cluster/' />
+<meta name="generator" content="WordPress 4.5.3" />
+<link rel="canonical" href="/custom-persistence-with-datascript/" />
+<link rel='shortlink' href='https://kb.avinetworks.com/?p=8495' />
+<link rel="alternate" type="application/json+oembed" href="/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fkb.avinetworks.com%2Fcustom-persistence-with-datascript%2F" />
+<link rel="alternate" type="text/xml+oembed" href="/wp-json/oembed/1.0/embed?url=https%3A%2F%2Fkb.avinetworks.com%2Fcustom-persistence-with-datascript%2F&#038;format=xml" />
+<style type="text/css">div#toc_container ul li {font-size: 100%;}</style>	<style type="text/css" id="faq-header-css">
+			.site-title a {
+			color: #fb5100;
+		}
+		</style>
+				
+							<style id="tt-easy-google-font-styles" type="text/css">
+			
+																						p {
+													}
+								
+																										h1 {
+													}
+								
+																										h2 {
+													}
+								
+																										h3 {
+													}
+								
+																										h4 {
+													}
+								
+																										h5 {
+													}
+								
+																										h6 {
+													}
+								
+																										h1 {
+													}
+								
+										
+							</style>
+						
+  <script>
+    (function(d) {
+      var config = {
+        kitId: 'yzx5ntn',
+        scriptTimeout: 3000,
+        async: true
+      },
+      h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+    })(document);
+  </script>  
+</head>
+<body class="single single-post postid-8495 single-format-standard">
+
+<header class="banner navbar navbar-inverse navbar-fixed-top" role="banner">
+  <div class="container">
+    <div class="navbar-header">
+      <img src="/wp-content/themes/faq/assets/img/toggle.png" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+        <span class="sr-only">Toggle Navigation</span>
+
+      </button>
+            	    <div class="site-title-container">
+                      <h1 class="site-title">
+                        <a href="https://avinetworks.com" rel="tooltip" title="" data-placement="bottom">
+                        <img src="/wp-content/uploads/2015/12/logo.png" alt="Avi KB">
+                       </a>
+                      </h1>
+		      <h1 class="site-title"><a href="/" rel="tooltip" title="" data-p\
+lacement="bottom">Knowledge Base</a>
+	    </div> <!--end site-title-container -->
+            
+    </div>
+    <nav class="collapse navbar-collapse" role="navigation">
+      <ul id="menu-main-menu" class="nav navbar-nav"><li class="dropdown menu-solution"><a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="https://www.avinetworks.com/software-load-balancer-for-any-cloud">Solution</a><div class="trigger">+</div>
+<ul class="dropdown-menu ">
+	<li class="menu-software-load-balancer-for-any-cloud"><a href="https://www.avinetworks.com/software-load-balancer-for-any-cloud">Software Load Balancer for Any Cloud</a></li>
+	<li class="menu-load-balancing-as-a-service-for-openstack"><a href="https://www.avinetworks.com/load-balancing-as-a-service-for-openstack">Load Balancing as a Service for OpenStack</a></li>
+	<li class="menu-application-services-for-sdn-environments"><a href="https://www.avinetworks.com/application-services-for-sdn">Application Services for SDN Environments</a></li>
+	<li class="menu-container-services-fabric-for-microservices"><a href="https://www.avinetworks.com/container-services-fabric-for-microservices-apps">Container Services Fabric for Microservices</a></li>
+</ul>
+</li>
+<li class="dropdown menu-product"><a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="https://www.avinetworks.com/product">Product</a><div class="trigger">+</div>
+<ul class="dropdown-menu ">
+	<li class="menu-overview"><a href="https://www.avinetworks.com/product">Overview</a></li>
+	<li class="menu-architecture"><a href="https://www.avinetworks.com/product-architecture">Architecture</a></li>
+	<li class="menu-benefits"><a href="https://www.avinetworks.com/product-benefits">Benefits</a></li>
+</ul>
+</li>
+<li class="menu-customers"><a href="https://www.avinetworks.com/customers">Customers</a></li>
+<li class="dropdown menu-partners"><a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="https://www.avinetworks.com/partners">Partners</a><div class="trigger">+</div>
+<ul class="dropdown-menu ">
+	<li class="menu-technology-partners"><a href="https://www.avinetworks.com/partners">Technology Partners</a></li>
+	<li class="menu-channel-partners"><a href="https://www.avinetworks.com/channel-partners">Channel Partners</a></li>
+</ul>
+</li>
+<li class="dropdown menu-resources"><a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="https://www.avinetworks.com/resources">Resources</a><div class="trigger">+</div>
+<ul class="dropdown-menu ">
+	<li class="menu-resource-center"><a href="https://www.avinetworks.com/resources">Resource Center</a></li>
+	<li class="menu-webinars"><a href="https://www.avinetworks.com/webinars">Webinars</a></li>
+	<li class="menu-knowledge-base"><a href="/">Knowledge Base</a></li>
+	<li class="menu-community"><a href="http://info.avinetworks.com/community">Community</a></li>
+</ul>
+</li>
+<li class="dropdown menu-company"><a class="dropdown-toggle" data-toggle="dropdown" data-target="#" href="https://www.avinetworks.com/about-us">Company</a><div class="trigger">+</div>
+<ul class="dropdown-menu ">
+	<li class="menu-about-us"><a href="https://avinetworks.com/about-us">About Us</a></li>
+	<li class="menu-management"><a href="https://avinetworks.com/management">Management</a></li>
+	<li class="menu-news"><a href="https://avinetworks.com/news">News</a></li>
+	<li class="menu-events"><a href="https://www.avinetworks.com/events">Events</a></li>
+	<li class="menu-careers"><a href="https://www.avinetworks.com/careers">Careers</a></li>
+	<li class="menu-contact-us"><a href="https://www.avinetworks.com/contact-us">Contact Us</a></li>
+	<li class="menu-blog"><a href="https://blog.avinetworks.com/">Blog</a></li>
+</ul>
+</li>
+</ul><!--
+    <form class="navbar-form navbar-right" role="search" method="get" action="https://kb.avinetworks.com/">
+      <div class="form-group">
+        <input type="text" value="" name="s" class="form-control" placeholder="Search Avi KB">
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+-->
+
+    <div class="navbar-right">
+      <span class="sublinks"> <a href="https://avinetworks.com/portal" target="_blank">Customer Portal</a>&nbsp; <a href="https://blog.avinetworks.com/" target="_blank">Blog</a>&nbsp; <a class="parent-menu" href="/contact-us">Contact</a> </span>
+      <a href="https://avinetworks.com/download" class="btn btn-primary">Download</a>
+    </div>
+
+    </nav>
+  </div>
+</header>
+
+  <div class="wrap content-container" role="document">
+    <div class="content row">
+              <aside class="sidebar col-sm-4" role="complementary">
+          
+
+
+
+
+
+
+
+
+
+
+<section class="widget search-2 widget_search"><form role="search" method="get" class="search-form form-inline" action="https://kb.avinetworks.com/">
+  <div class="input-group">
+    <input type="search" value="" name="s" class="search-field form-control" placeholder="Search Avi KB">
+    <label class="hide">Search for:</label>
+    <span class="input-group-btn">
+      <button type="submit" class="search-submit btn btn-default">Search</button>
+    </span>
+  </div>
+</form>
+</section><!--
+  For documentation on the collapsible menu, see:
+   
+    http://plugins.twinpictures.de/premium-plugins/collapse-pro-matic/documentation/
+    http://plugins.twinpictures.de/plugins/collapse-o-matic/documentation/
+
+-->
+<div id="expandable-nav">
+    <div class="collapseomatic " id="id5926"  title="Architecture" tabindex="0" cookie = "nav-architecture"   >Architecture</div><div id="target-id5926" class="collapseomatic_content ">
+        <ul>
+            <li><a href="/docs/architectural-overview/">Overview</li>
+	    <li><a href="/system-requirements-ecosystem/">Ecosystem System Requirements</a></li>
+	    <li><a href="/system-requirements-hardware/">Hardware System Requirements</a></li>
+            <li><a href="/controller-cluster-ip/">Controller Cluster IP</a></li>
+            <li><a href="/docs/configuration-guide/applications/virtual-services/">Virtual Services</a></li>
+			<li><a href="/search-engine-group/">Search Engine Group</a></li>
+        </ul>
+        <div class="collapseomatic " id="id5780"  title="Pool" tabindex="0" cookie = "nav-architecture-pool"   >Pool</div><div id="target-id5780" class="collapseomatic_content ">
+            <ul>
+                <li><a href="/docs/configuration-guide/applications/pools/">Overview</a></li>
+                <li><a href="/ab-pool-feature/">A/B Testing</a></li>
+                <li><a href="/support-for-sni-extension-in-tls-handshakes-to-pool-servers/">SNI Extension in TLS
+                        Handshakes</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="collapseomatic " id="id4170"  title="Features" tabindex="0" cookie = "nav-features"   >Features</div><div id="target-id4170" class="collapseomatic_content ">
+        <div class="collapseomatic " id="id435"  title="Load Balancing" tabindex="0" cookie = "nav-features-lb"   >Load Balancing</div><div id="target-id435" class="collapseomatic_content ">
+            <ul>
+                <li><a href="/autoscale-service-engines/">Autoscaling Service Engines</a></li>
+                <li><a href="/docs/configuration-guide/applications/vs-scaling/">Virtual Service Scaling</a></li>
+                <li><a href="/bgp-support-for-virtual-services/">BGP Support for Scaling Virtual Services</a></li>
+                <li><a href="/docs/configuration-guide/applications/pools/#load_balancing_algorithms">Load Balancing
+                        Algorithms</a></li>
+            </ul>
+            <div class="collapseomatic " id="id7551"  title="Persistence" tabindex="0" cookie = "nav-features-lb-persistence"   >Persistence</div><div id="target-id7551" class="collapseomatic_content ">
+                <ul>
+                    <li><a href="/overview-of-server-persistence/">Overview</a></li>
+                    <li><a href="/http-cookie-persistence/">HTTP Cookie</a></li>
+                    <li><a href="/app-cookie-persistence/">App Cookie</a></li>
+                    <li><a href="/custom-http-header-persistence/">Custom HTTP Header</a></li>
+                    <li><a href="/client-ip-persistence/">Client IP</a></li>
+                    <li><a href="/tls-persistence/">TLS</a></li>
+                    <li><a href="/custom-persistence-with-datascript/">Custom DataScript</a></li>
+                </ul>
+            </div>
+        </div>
+        <ul>
+            <li><a href="/server-autoscale/">Server Autoscale</a></li>
+        </ul>
+        <div class="collapseomatic " id="id5919"  title="Health Monitoring" tabindex="0" cookie = "nav-features-hm"   >Health Monitoring</div><div id="target-id5919" class="collapseomatic_content ">
+            <ul>
+                <li><a href="/overview-of-health-monitors/">Overview of Health Monitors</a></li>
+                <li><a href="/https-health-monitor/">HTTPS Health Monitor</a></li>
+                <li><a href="/ping-health-monitor/">Ping Health Monitor</a></li>
+                <li><a href="/tcp-health-monitor/">TCP Health Monitor</a></li>
+                <li><a href="/udp-health-monitor/">UDP Health Monitor</a></li>
+                <li><a href="/dns-health-monitor/">DNS Health Monitor</a></li>
+                <li><a href="/external-health-monitor/">External Health Monitor</a></li>
+                <li><a href="/docs/configuration-guide/templates/profiles/health-monitor-profile/">Health Monitor
+                        Profile</a></li>
+                <li><a href="/docs/configuration-guide/applications/virtual-services/vs-health/">Virtual Service
+                        Health</a></li>
+                <li><a href="/servers-flapping-up-down/">Server Flapping</a></li>
+                <li><a href="/why-is-a-server-marked-down/">Marking a Server Down</a></li>
+                <li><a href="/health-monitor-troubleshooting/">Health Monitor Troubleshooting</a></li>
+                <li><a href="/gateway-monitoring-for-legacy-ha/">Gateway Monitoring for Legacy HA</a></li>
+            </ul>
+        </div>
+        <div class="collapseomatic " id="id3800"  title="High Availability" tabindex="0" cookie = "nav-features-ha"   >High Availability</div><div id="target-id3800" class="collapseomatic_content ">
+            <ul>
+                <li><a href="/overview-of-vantage-high-availability/">Overview</a></li>
+            </ul>
+            <div class="collapseomatic " id="id1866"  title="Control Pane" tabindex="0" cookie = "nav-features-ha-cp"   >Control Pane</div><div id="target-id1866" class="collapseomatic_content ">
+                <ul>
+                    <li><a href="/ha-for-avi-controllers/">Overview</a></li>
+                    <li><a href="/impact-of-a-controller-failure/">Impact of Controller Failure</a></li>
+                    <li><a href="/clustering-controllers-from-different-networks/">Clustering Controllers in Different
+                            Networks</a></li>
+                    <li><a href="/backup-the-configuration/">Configuration Backup and Restore</a></li>
+                </ul>
+            </div>
+            <div class="collapseomatic " id="id8728"  title="Data Plane" tabindex="0" cookie = "nav-features-ha-dp"   >Data Plane</div><div id="target-id8728" class="collapseomatic_content ">
+                <ul>
+                    <li><a href="/overview-of-vantage-high-availability/">Overview</a></li>
+                    <li><a href="/elastic-ha-for-avi-service-engines-16-2/">Elastic HA</a></li>
+                    <li><a href="/legacy-ha-for-avi-service-engines/">Legacy HA</a></li>
+                    <li><a href="/anti-affinity-for-service-engine-placement/">Anti-affinity for SE Placement</a></li>
+                    <li><a href="/gateway-monitoring-for-legacy-ha/">Gateway Monitoring for Legacy HA</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="collapseomatic " id="id5056"  title="Security" tabindex="0" cookie = "nav-features-security"   >Security</div><div id="target-id5056" class="collapseomatic_content ">
+            <ul>
+                <li><a href="/overview-of-vantage-security/">Overview</a></li>
+            </ul>
+            <div class="collapseomatic " id="id7876"  title="SSL" tabindex="0" cookie = "nav-features-security-ssl"   >SSL</div><div id="target-id7876" class="collapseomatic_content ">
+                <ul>
+                    <li><a href="/docs/configuration-guide/applications/virtual-services/vs-security/">Virtual Service
+                            Security</a></li>
+                    <li><a href="/ssl-visibility-and-troubleshooting/">SSL Visibility and Troubleshooting</a></li>
+                    <li><a href="/redirect-http-to-https/">Redirect HTTP to HTTPS</a></li>
+                    <li><a href="/overview-of-ssl-termination/">SSL/TLS Termination</a></li>
+                    <li><a href="/ssl-tls-version-support/">SSL/TLS Version Support</a></li>
+                    <li><a href="/app-transport-security/">App Transport Security (ATS)</a></li>
+                    <li><a href="/ssl-tls-profile/">SSL/TLS Profile</a></li>
+                    <li><a href="/ssl-everywhere/">SSL Everywhere</a></li>
+                    <li><a href="/ssl-performance/">SSL Performance</a></li>
+                    <li><a href="/multi-level-domain-support-for-ssl/">Multi-level Domain Support</a></li>
+                    <li><a href="/client-ssl-certificate-validation/">Client SSL Cert Validation</a></li>
+                    <li><a href="/physical-security-for-ssl-keys/">Physical Security for SSL Keys</a></li>
+                </ul>
+            </div>
+            <div class="collapseomatic " id="id673"  title="Server Name Indication" tabindex="0" cookie = "nav-features-security-sni"   >Server Name Indication</div><div id="target-id673" class="collapseomatic_content ">
+                <ul>
+                    <li><a href="/server-name-indication/">Overview</a></li>
+                    <li><a href="/wildcard-sni-matching-for-virtual-hosting/">Wildcard SNI Matching</a></li>
+                </ul>
+            </div>
+            <div class="collapseomatic " id="id6796"  title="RSA, ECC, PFS" tabindex="0" cookie = "nav-features-security-rep"   >RSA, ECC, PFS</div><div id="target-id6796" class="collapseomatic_content ">
+                <ul>
+                    <li><a href="/ecc-versus-rsa-certificate-priority/">EC versus RSA Cert Priority</a></li>
+                    <li><a href="/app-transport-security/">App Transport Security (ATS)</a></li>
+                </ul>
+            </div>
+            <div class="collapseomatic " id="id1329"  title="Cert Management" tabindex="0" cookie = "nav-features-sucurety-security-management"   >Cert Management</div><div id="target-id1329" class="collapseomatic_content ">
+                <ul>
+                    <li><a href="/notification-of-ssl-certificate-expiration/">Notification of SSL Certification</a>
+                    </li>
+                    <li><a href="/upload-hsm-pkg/">CSR Automation</a></li>
+                    <li><a href="/crl-validation-options/">Full-Chain CRL Checking</a></li>
+                </ul>
+            </div>
+            <div class="collapseomatic " id="id3337"  title="HSM Support" tabindex="0" cookie = "nav-features-security-hsm"   >HSM Support</div><div id="target-id3337" class="collapseomatic_content ">
+                <ul>
+                    <li><a href="/avi-vantage-integration-with-safenet-network-hsm/">SafeNet Network HSM</a></li>
+                    <li><a href="/thales-nshield-integration-2/">Thales nShield HSM</a></li>
+                    <li><a href="/upload-hsm-pkg/">Package Upload</a></li>
+                </ul>
+            </div>
+            <div class="collapseomatic " id="id2953"  title="Denial of Service" tabindex="0" cookie = "nav-features-dos"   >Denial of Service</div><div id="target-id2953" class="collapseomatic_content ">
+                <ul>
+                    <li><a href="/distributed-denial-of-service/">DDoS</a></li>
+                    <li><a href="/ddos-attacks-mitigated/">DDoS Attacks Mitigated</a></li>
+                </ul>
+            </div>
+            <div class="collapseomatic " id="id3035"  title="Policies" tabindex="0" cookie = "nav-features-policies"   >Policies</div><div id="target-id3035" class="collapseomatic_content ">
+                <ul>
+                    <li><a href="/application-profile/#HTTP_app_profile_security_tab">HTTP App Profile Security Tab</a>
+                    </li>
+                    <li><a href="/auth-profile/">Auth Profile</a></li>
+                </ul>
+            </div>
+            <div class="collapseomatic " id="id1734"  title="User Access Controls" tabindex="0" cookie = "nav-features-acl"   >User Access Controls</div><div id="target-id1734" class="collapseomatic_content ">
+                <li><a href="/user-accounts/">User Accounts</a></li>
+                <li><a href="/user-account-roles/">User Account Roles</a></li>
+                <li><a href="/super-user-accounts/">Super User Accounts</a></li>
+                <li><a href="/remote-users-authen-authrz/">Authentication and Authorization</a></li>
+                <li><a href="/ldap-authentication/">LDAP Authentication</a></li>
+                <li><a href="/tacacs-for-avi-vantage-users/">TACACS+</a></li>
+                <li><a href="/securing-management-ip-access/">Securing Management IP Access</a></li>
+                <li><a href="/strong-password-enforcement/">Strong Password Enforcement</a></li>
+            </div>
+            <div class="collapseomatic " id="id5301"  title="App Isolation/Micro-Segmentation" tabindex="0" cookie = "nav-features-isolation"   >App Isolation/Micro-Segmentation</div><div id="target-id5301" class="collapseomatic_content ">
+                <ul>
+                    <li><a href="Tenancy /tenants/">Tenancy</a></li>
+                    <li><a href="/all-tenants-view/">All Tenants View</a></li>
+                    <li><a href="/switch-between-tenants/">Switching Between Tenants</a></li>
+                </ul>
+            </div>
+        </div>
+        <ul>
+            <li><a href="/rate-shaping-and-throttling-options/">Rate Shaping and Throttling</a></li>
+        </ul>
+        <div class="collapseomatic " id="id7236"  title="Acceleration" tabindex="0" cookie = "nav-features-acceleration"   >Acceleration</div><div id="target-id7236" class="collapseomatic_content ">
+            <ul>
+                <li><a href="/application-profile/#HTTP_acceleration">HTTP Acceleration</a></li>
+                <li><a href="/overview-of-http-cache/">Overview of HTTP Cache </a></li>
+                <li><a href="/docs/configuration-guide/templates/profiles/application-profile/#HTTP_compression/">Compression</a>
+                </li>
+                <li>
+                    <a href="/docs/configuration-guide/templates/profiles/application-profile/#connection_multiplexing/">Connection
+                        Multiplexing</a></li>
+            </ul>
+        </div>
+        <div class="collapseomatic " id="id2823"  title="Analytics" tabindex="0" cookie = "nav-features-analytics"   >Analytics</div><div id="target-id2823" class="collapseomatic_content ">
+            <div class="collapseomatic " id="id5198"  title="Alerts" tabindex="0" cookie = "nav-features-analytics-alerts"   >Alerts</div><div id="target-id5198" class="collapseomatic_content ">
+                <ul>
+                    <li><a href="/notifications-overview/">Notifications Overview</a></li>
+                    <li><a href="/events-overview/">Events Overview</a></li>
+                    <li><a href="/events-list/">Events List</a></li>
+                    <li><a href="/alerts-overview/">Alerts Overview</a></li>
+                    <li><a href="/alert-config/">Alert Config</a></li>
+                    <li><a href="/avi-controller-alerts-log/">Avi Controller Alerts Log</a></li>
+                    <li><a href="#">Example Controller Alerts Log</a></li>
+                    <li><a href="/snmp-support-in-avi-vantage/">SNMP Support in Avi Vantage</a></li>
+                </ul>
+            </div>
+            <div class="collapseomatic " id="id2336"  title="Logs" tabindex="0" cookie = "nav-features-analytics-logs"   >Logs</div><div id="target-id2336" class="collapseomatic_content ">
+                <ul>
+                    <li><a href="/avi-controller-events-log/">Avi Controller Events Log</a></li>
+                    <li><a href="/configuration-guide/applications/virtual-services/vs-logs/">Virtual Service Logs</a>
+                    </li>
+                    <li><a href="/events-that-trigger-significant-logs/">Significant Logs</a></li>
+                    <li><a href="/avi-controller-alerts-log/">Avi Controller Alerts Log</a></li>
+                    <li><a href="/client-log-levels/">Client Log Levels</a></li>
+                    <li><a href="/logging-all-headers-in-client-server-http-traffic/">Logging All Headers in HTTP
+                            Traffic</a></li>
+                    <li><a href="/excluding-unwanted-messages-from-client-logs/">Excluding Unwanted Client Log
+                            Entries </a></li>
+                    <li><a href="/save-log-searches/">Saving Log Searches</a></li>
+                </ul>
+            </div>
+            <div class="collapseomatic " id="id4837"  title="Metrics" tabindex="0" cookie = "nav-features-analytics-metrics"   >Metrics</div><div id="target-id4837" class="collapseomatic_content ">
+                <ul>
+                    <li><a href="/metrics-list/">Metrics List</a></li>
+                    <li><a href="/metrics-retention-period/">Metrics Retention Period</a></li>
+                    <li><a href="/metrics-used-for-auto-scaling-service-engines/">Metrics for Autoscaling SEs</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="collapseomatic " id="id6937"  title="Real-Time Visibility and Traffic Inspection" tabindex="0" cookie = "nav-features-rtv"   >Real-Time Visibility and Traffic Inspection</div><div id="target-id6937" class="collapseomatic_content ">
+            <ul>
+                <li><a href="/docs/configuration-guide/applications/virtual-services/vs-clients/">VS Client
+                        Information</a></li>
+                <li><a href="/enable-client-insights-navigation-timing/">Navigation Timing for Client Insights</a>
+                </li>
+                <li><a href="/geo-location-database/">Geo Location Database</a></li>
+                <li>
+                    <a href="/docs/configuration-guide/applications/virtual-services/vs-security/#view_security_insights">
+                        View Security Insights </a></li>
+            </ul>
+        </div>
+        <div class="collapseomatic " id="id8568"  title="Ecosystem Integration" tabindex="0" cookie = "nav-features-ecosystem"   >Ecosystem Integration</div><div id="target-id8568" class="collapseomatic_content ">
+            <ul>
+                <li><a href="/orchestrator-access-modes/">Orchestrator Access Modes</a></li>
+            </ul>
+        </div>
+        <div class="collapseomatic " id="id7158"  title="Administration" tabindex="0" cookie = "nav-features-admin"   >Administration</div><div id="target-id7158" class="collapseomatic_content ">
+            <div class="collapseomatic " id="id4098"  title="User Account Mgmt" tabindex="0" cookie = "nav-features-admin-uam"   >User Account Mgmt</div><div id="target-id4098" class="collapseomatic_content ">
+                <ul>
+                    <li><a href="/user-account-self-service/">User Account Self-Service</a></li>
+                    <li><a href="/user-accounts/">User Accounts</a></li>
+                    <li><a href="/super-user-accounts/">Super User</a></li>
+                    <li><a href="/remote-users-authen-authrz/">Authentication and Authorization</a></li>
+                </ul>
+            </div>
+            <div class="collapseomatic " id="id9838"  title="Multitenancy" tabindex="0" cookie = "nav-features-multitenancy"   >Multitenancy</div><div id="target-id9838" class="collapseomatic_content ">
+                <ul>
+                    <li><a href="/tenants/">Tenants</a></li>
+                    <li><a href="/all-tenants-view/">All Tenants View</a></li>
+                </ul>
+            </div>
+            <div class="collapseomatic " id="id5038"  title="Roles" tabindex="0" cookie = "nav-features-roles"   >Roles</div><div id="target-id5038" class="collapseomatic_content ">
+                <ul>
+                    <li><a href="/user-account-roles/">User Account Roles</a></li>
+                </ul>
+            </div>
+            <div class="collapseomatic " id="id8611"  title="Templates" tabindex="0" cookie = "nav-features-templates"   >Templates</div><div id="target-id8611" class="collapseomatic_content ">
+                <ul>
+                    <li><a href="/docs/configuration-guide/templates/profiles/">Profiles</a></li>
+                    <li><a href="/docs/configuration-guide/templates/groups/">Groups</a></li>
+                    <li><a href="/docs/configuration-guide/templates/security/">Security</a></li>
+                    <li><a href="/docs/configuration-guide/templates/scripts/">Scripts</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+	<div class="collapseomatic " id="id5763"  title="Guides" tabindex="0" cookie = "guides"   >Guides</div><div id="target-id5763" class="collapseomatic_content ">
+    	<div class="collapseomatic " id="id817"  title="Installation Guides" tabindex="0" cookie = "installation_guides"   >Installation Guides</div><div id="target-id817" class="collapseomatic_content ">
+        	<ul>
+            	<li><a href="/docs/installation-guides/">Installation Guides Overview</a></li>
+            	<li><a href="/installing-avi-vantage-for-vmware-vcenter-16-2">Installing for VMware vCenter</a></li>
+            	<li><a href="/installing-avi-vantage-for-openstack-16-2">Installing for OpenStack</a></li>
+            	<li><a href="/installing-avi-vantage-for-a-linux-server-cloud-16-2">Installing on Bare Metal</a></li>
+            	<li><a href="/installing-avi-vantage-in-amazon-web-services-16-2">Installing for AWS</a></li>
+            	<li><a href="/installing-avi-vantage-with-mesosphere-dcos-16-2">Installing for Mesosphere DC/OS</a></li>
+				<li><a href="/installing-avi-vantage-for-csp-2100">Installing for Cisco CSP-2100</a></li>
+        	</ul>
+    	</div>
+    	<div class="collapseomatic " id="id2781"  title="Configuration" tabindex="0" cookie = "configuration"   >Configuration</div><div id="target-id2781" class="collapseomatic_content ">
+        	<div class="collapseomatic " id="id6197"  title="Applications" tabindex="0" cookie = "configuration-apps"   >Applications</div><div id="target-id6197" class="collapseomatic_content ">
+            	<ul>
+                	<li><a href="/docs/configuration-guide/applications/">Applications Overview</a></li>
+                	<li><a href="/docs/configuration-guide/applications/virtual-services/">Virtual Services</a></li>
+                	<li><a href="/docs/configuration-guide/applications/vs-scaling/">Virtual Services Scaling</a></li>
+                	<li><a href="/docs/configuration-guide/applications/vs-policies/">Virtual Services Policies</a></li>
+                	<li><a href="/docs/configuration-guide/applications/pools/">Pools</a></li>
+                	<li><a href="/docs/configuration-guide/applications/servers/">Servers</a></li>
+            	</ul>
+        	</div>
+        	<div class="collapseomatic " id="id8368"  title="Operations" tabindex="0" cookie = "configuration-ops"   >Operations</div><div id="target-id8368" class="collapseomatic_content ">
+            	<ul>
+                	<li><a href="/docs/configuration-guide/operations/">Operations Overview</a></li>
+                	<li><a href="/docs/configuration-guide/operations/alerts/">Alerts</a></li>
+                	<li><a href="/docs/configuration-guide/operations/events/">Events</a></li>
+                	<li><a href="/docs/configuration-guide/operations/services/">Services</a></li>
+                	<li><a href="/docs/configuration-guide/operations/traffic-capture/">Traffic Capture</a></li>
+            	</ul>
+        	</div>
+        	<div class="collapseomatic " id="id8700"  title="Templates" tabindex="0" cookie = "configuration-templates"   >Templates</div><div id="target-id8700" class="collapseomatic_content ">
+            	<ul>
+                	<li><a href="/docs/configuration-guide/templates/">Templates Overview</a></li>
+                	<li><a href="/docs/configuration-guide/templates/profiles/">Profiles</a></li>
+                	<li><a href="/docs/configuration-guide/templates/profiles/application-profile/">Application</a></li>
+                	<li><a href="/docs/configuration-guide/templates/profiles/tcpudp-profile/">TCP/UDP</a></li>
+                	<li><a href="/docs/configuration-guide/templates/profiles/persistence-profile/">Persistence</a></li>
+                	<li><a href="/docs/configuration-guide/templates/profiles/health-monitor-profile/">Health
+                        Monitor</a></li>
+                	<li><a href="/docs/configuration-guide/templates/profiles/analytics-profile/">Analytics</a></li>
+                	<li><a href="/docs/configuration-guide/templates/groups/">Groups</a></li>
+                	<li><a href="/docs/configuration-guide/templates/security/">Security</a></li>
+                	<li><a href="/docs/configuration-guide/templates/scripts/">Scripts</a></li>
+            	</ul>
+        	</div>
+        	<div class="collapseomatic " id="id9997"  title="Infrastructure" tabindex="0" cookie = "configuration-infrastructure"   >Infrastructure</div><div id="target-id9997" class="collapseomatic_content ">
+            	<ul>
+                	<li><a href="/docs/configuration-guide/infrastructure/">Infrastructure Overview</a></li>
+                	<li><a href="/docs/configuration-guide/infrastructure/#dashboard/">Dashboard</a></li>
+            	</ul>
+            	<div class="collapseomatic " id="id233"  title="Clouds" tabindex="0" cookie = "configuration-infrastructure-clouds"   >Clouds</div><div id="target-id233" class="collapseomatic_content ">
+                	<ul>
+                    	<li><a href="/docs/configuration-guide/infrastructure/#clouds/">Clouds Overview</a></li>
+                    	<li><a href="/docs/configuration-guide/infrastructure/#cloud_creation/">Cloud Creation</a></li>
+                	</ul>
+            	</div>
+            	<div class="collapseomatic " id="id7427"  title="Service Engines" tabindex="0" cookie = "configuration-infrastructure-se"   >Service Engines</div><div id="target-id7427" class="collapseomatic_content ">
+                	<ul>
+                    	<li><a href="/docs/configuration-guide/infrastructure/#service-engines/">Service Engines
+                            Overview</a></li>
+                    		<li><a href="/docs/configuration-guide/infrastructure/#service-engine-detail/">SE Quick Info
+                            Popup</a>
+                    	</li>
+                    	<li><a href="/docs/configuration-guide/infrastructure/#create-service-engine/">Create an SE</a>
+                    	</li>
+                    	<li><a href="/docs/configuration-guide/infrastructure/#delete-service-engine/">Delete an SE</a>
+                    	</li>
+                    	<li><a href="/docs/configuration-guide/applications/servers/">Servers</a></li>
+                	</ul>
+            	</div>
+        	</div>
+        	<div class="collapseomatic " id="id5053"  title="Administration" tabindex="0" cookie = "nav-admin"   >Administration</div><div id="target-id5053" class="collapseomatic_content ">
+            	<ul>
+                	<li><a href="/docs/configuration-guide/administration/">Administration Overview</a></li>
+                	<li><a href="/user-accounts/">User Accounts</a></li>
+                	<li><a href="/remote-users-authen-authrz/">User Authentication & Authorization</a></li>
+                	<li><a href="/administrative-settings/">Controller Administrative Settings</a></li>
+                	<li><a href="//upgrading-the-vantage-software/">Upgrading Avi Vantage</a></li>
+                	<li><a href="/docs/configuration-guide/applications/servers/">Servers</a></li>
+            	</ul>
+        	</div>
+    	</div>
+    	<ul>
+        	<li><a href="/docs/cli-guide">CLI Guide</a></li>
+    	</ul>
+    	<div class="collapseomatic " id="id8109"  title="DataScript Guide" tabindex="0" cookie = "nav-datascript-guide"   >DataScript Guide</div><div id="target-id8109" class="collapseomatic_content ">
+        	<ul>
+            	<li><a href="/docs/datascript-guide/">Overview</a></li>
+            	<li><a href="/docs/datascript-guide/datascript-object-model/">Object Model</a></li>
+            	<li><a href="/docs/datascript-guide/datascript-constructs/">Constructs</a></li>
+            	<li><a href="/docs/datascript-guide/datascript-precedence/">Precedence</a></li>
+            	<li><a href="/docs/datascript-guide/datascript-samples/">Samples</a></li>
+            	<li><a href="/datascript-functions/">Functions</a></li>
+        	</ul>
+    	</div>
+		<div class="collapseomatic " id="id8099"  title="API Guides" tabindex="0" cookie = "nav-api-guides"   >API Guides</div><div id="target-id8099" class="collapseomatic_content ">
+        	<ul>
+            	<li><a href="/docs/latest/api-guide/">API Guide v16.2</a></li>
+            	<li><a href="/docs/16.1/api-guide/">API Guide v16.1</a></li>
+		  	</ul>
+		</div>
+	
+	</div>
+    <div class="collapseomatic " id="id1848"  title="Release Notes" tabindex="0" cookie = "release_notes"   >Release Notes</div><div id="target-id1848" class="collapseomatic_content ">
+        <ul>
+	    <li><a href="/avi-vantage-16-2-2-release-notes/">Latest (16.2.2)</a></li>
+            <li><a href="/avi-vantage-16-2-1-release-notes/">16.2.1</a></li>
+            <li><a href="/avi-vantage-release-notes/">All</a></li>
+        </ul>
+    </div>
+
+    <div class="collapseomatic " id="id9437"  title="Support" tabindex="0" cookie = "nav-support"   >Support</div><div id="target-id9437" class="collapseomatic_content ">
+        <ul>
+            <li><a href="/where-can-i-download-avi-vantage/">Customer Download</a></li>
+            <li><a href="/upgrading-the-vantage-software/">Upgrade</a></li>
+            <li><a href="/support-terms-and-conditions/">Terms and Conditions</a></li>
+            <li><a href="/access-to-avi-portal/">Customer Portal</a></li>
+            <li><a href="/terms-of-avi-vantage-license/">License</a></li>
+            <li><a href="/notification-of-vantage-license-expiration/">License Expiration</a></li>
+            <li><a href="/backup-and-restore-of-avi-vantage-configuration/">Configuration Backup and Restore</a></li>
+            <li><a href="/rolling-back-the-system/">Rollback</a></li>
+            <li><a href="/collecting-tech-support-logs/">Collecting Logs</a></li>
+            <li><a href="/install-vantage-on-laptop-with-fusion/">Laptop Installation with VMware Fusion</a></li>
+        </ul>
+    </div>
+
+    <div class="collapseomatic " id="id1436"  title="Feedback/Questions" tabindex="0" cookie = "feedback_questions"   >Feedback/Questions</div><div id="target-id1436" class="collapseomatic_content ">
+        <ul>
+            <li><a href="mailto:docs@avinetworks.com">Email feedback to Avi Docs</a></li>
+            <li><a href="mailto:support@avinetworks.com">Email questions to Avi Support</a></li>
+        </ul>
+    </div>
+    <!-- end expandabld-nav -->
+</div>
+<section class="widget meta-4 widget_meta"><h3 class="faq-title">Meta</h3>			<ul>
+						<li><a href="/wp-login.php">Log in</a></li>
+			<li><a href="/feed/">Entries <abbr title="Really Simple Syndication">RSS</abbr></a></li>
+			<li><a href="/comments/feed/">Comments <abbr title="Really Simple Syndication">RSS</abbr></a></li>
+			<li><a href="https://wordpress.org/" title="Powered by WordPress, state-of-the-art semantic personal publishing platform.">WordPress.org</a></li>			</ul>
+			</section>
+
+
+        </aside><!-- /.sidebar -->
+            <main class="main col-sm-8" role="main">
+
+                <h1 class="faq-title">Custom Persistence with DataScript</h1>
+<!--
+		<ul class="breadcrumb" itemprop="breadcrumb">
+			<span class="trail-browse">Browse:</span> <span class="trail-begin"><a href="https://kb.avinetworks.com" title="Avi KB" rel="home">Home</a></span>
+			 <span class="sep">&#47;</span> <span class="trail-end">Custom Persistence with DataScript</span>
+		</ul><hr/>-->          <article class="post-8495 post type-post status-publish format-standard hentry category-datascript tag-16-2 tag-persistence">
+
+    <p>Avi Vantage includes a number of common methods of persisting clients to the same server for a duration of time. For some applications, it may be valuable to have more customization to the behavior of the persistence, or to support a wider array of application types.  See <a href="/overview-of-server-persistence/" target="_blank">Overview of Server Persistence</a> for other methods.</p>
+<p>Persistence is based on the ability to uniquely identify a user, and to stick or persist them to a destination server for a period of time.</p>
+<p>The primary DataScript function for creating custom persistence are the table commands, which enable storing data locally on an Avi Service Engine for a configurable length of time. The stored data is also replicated to other relevant Service Engines for high availability and scale.</p>
+<table class="table table-hover">
+<tbody>
+<tr>
+<td width="426"><strong><a href="/datascript-avi-vs-table_insert/" target="_blank">avi.vs.table_insert( [table_name,] key, value [, lifetime] )</a></strong></td>
+<td width="274">Store custom data in a time-based table</td>
+</tr>
+<tr>
+<td width="426"><strong><a href="/datascript-avi-vs-table_lookup/" target="_blank">avi.vs.table_lookup( [table_name,] key [, lifetime_exten] )</a></strong></td>
+<td width="274">Lookup data in a table</td>
+</tr>
+<tr>
+<td width="426"><strong><a href="/datascript-avi-vs-table_remove/" target="_blank">avi.vs.table_remove( [table_name,] key )</a></strong></td>
+<td width="274">Remove data from a table</td>
+</tr>
+<tr>
+<td width="426"><strong><a href="/datascript-avi-vs-table_refresh/" target="_blank">avi.vs.table_refresh( [table_name,] key [, lifetime_exten] )</a></strong></td>
+<td width="274">Update the expire time for a table entry</td>
+</tr>
+</tbody>
+</table>
+<h3>JSessionID Example</h3>
+<p>The following example persists based upon an HTTP cookie sent from a server with a unique JSessionID. Subsequent client requests include that cookie, which is used to persist requests to the same server.</p>
+<p>HTTP Response event: Add persist for 20 minutes, or update timer if entry already exists<br />
+<!-- Crayon Syntax Highlighter v2.7.1 -->
+
+		<div id="crayon-57d04a2e1a3e3473276450" class="crayon-syntax crayon-theme-classic crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover" style=" margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" mouseover overlay hide delay" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+if avi.http.get_cookie("JSESSIONID") then
+  avi.vs.table_insert(avi.http.get_cookie("JSESSIONID"), avi.pool.server_ip(), 1200)
+end</textarea></div>
+			<div class="crayon-main" style="">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="hide">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-57d04a2e1a3e3473276450-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-57d04a2e1a3e3473276450-2">2</div><div class="crayon-num" data-line="crayon-57d04a2e1a3e3473276450-3">3</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-57d04a2e1a3e3473276450-1"><span class="crayon-st">if</span><span class="crayon-h"> </span><span class="crayon-v">avi</span><span class="crayon-sy">.</span><span class="crayon-v">http</span><span class="crayon-sy">.</span><span class="crayon-e">get_cookie</span><span class="crayon-sy">(</span><span class="crayon-s">"JSESSIONID"</span><span class="crayon-sy">)</span><span class="crayon-h"> </span><span class="crayon-st">then</span></div><div class="crayon-line crayon-striped-line" id="crayon-57d04a2e1a3e3473276450-2"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-v">avi</span><span class="crayon-sy">.</span><span class="crayon-v">vs</span><span class="crayon-sy">.</span><span class="crayon-e">table_insert</span><span class="crayon-sy">(</span><span class="crayon-v">avi</span><span class="crayon-sy">.</span><span class="crayon-v">http</span><span class="crayon-sy">.</span><span class="crayon-e">get_cookie</span><span class="crayon-sy">(</span><span class="crayon-s">"JSESSIONID"</span><span class="crayon-sy">)</span><span class="crayon-sy">,</span><span class="crayon-h"> </span><span class="crayon-v">avi</span><span class="crayon-sy">.</span><span class="crayon-v">pool</span><span class="crayon-sy">.</span><span class="crayon-e">server_ip</span><span class="crayon-sy">(</span><span class="crayon-sy">)</span><span class="crayon-sy">,</span><span class="crayon-h"> </span><span class="crayon-cn">1200</span><span class="crayon-sy">)</span></div><div class="crayon-line" id="crayon-57d04a2e1a3e3473276450-3"><span class="crayon-st">end</span></div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0007 seconds] -->
+
+HTTP Request event: Rename the pool before applying to a virtual service<br />
+<!-- Crayon Syntax Highlighter v2.7.1 -->
+
+		<div id="crayon-57d04a2e1a3ec860526831" class="crayon-syntax crayon-theme-classic crayon-font-monaco crayon-os-pc print-yes notranslate" data-settings=" minimize scroll-mouseover" style=" margin-top: 12px; margin-bottom: 12px; font-size: 12px !important; line-height: 15px !important;">
+		
+			<div class="crayon-toolbar" data-settings=" mouseover overlay hide delay" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><span class="crayon-title"></span>
+			<div class="crayon-tools" style="font-size: 12px !important;height: 18px !important; line-height: 18px !important;"><div class="crayon-button crayon-nums-button" title="Toggle Line Numbers"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-plain-button" title="Toggle Plain Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-wrap-button" title="Toggle Line Wrap"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-expand-button" title="Expand Code"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-copy-button" title="Copy"><div class="crayon-button-icon"></div></div><div class="crayon-button crayon-popup-button" title="Open Code In New Window"><div class="crayon-button-icon"></div></div></div></div>
+			<div class="crayon-info" style="min-height: 16.8px !important; line-height: 16.8px !important;"></div>
+			<div class="crayon-plain-wrap"><textarea wrap="soft" class="crayon-plain print-no" data-settings="dblclick" readonly style="-moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4; font-size: 12px !important; line-height: 15px !important;">
+if avi.http.get_cookie("JSESSIONID") then
+  avi.pool.select(, avi.vs.table_lookup(avi.http.get_cookie("JSESSIONID")))
+end</textarea></div>
+			<div class="crayon-main" style="">
+				<table class="crayon-table">
+					<tr class="crayon-row">
+				<td class="crayon-nums " data-settings="hide">
+					<div class="crayon-nums-content" style="font-size: 12px !important; line-height: 15px !important;"><div class="crayon-num" data-line="crayon-57d04a2e1a3ec860526831-1">1</div><div class="crayon-num crayon-striped-num" data-line="crayon-57d04a2e1a3ec860526831-2">2</div><div class="crayon-num" data-line="crayon-57d04a2e1a3ec860526831-3">3</div></div>
+				</td>
+						<td class="crayon-code"><div class="crayon-pre" style="font-size: 12px !important; line-height: 15px !important; -moz-tab-size:4; -o-tab-size:4; -webkit-tab-size:4; tab-size:4;"><div class="crayon-line" id="crayon-57d04a2e1a3ec860526831-1"><span class="crayon-st">if</span><span class="crayon-h"> </span><span class="crayon-v">avi</span><span class="crayon-sy">.</span><span class="crayon-v">http</span><span class="crayon-sy">.</span><span class="crayon-e">get_cookie</span><span class="crayon-sy">(</span><span class="crayon-s">"JSESSIONID"</span><span class="crayon-sy">)</span><span class="crayon-h"> </span><span class="crayon-st">then</span></div><div class="crayon-line crayon-striped-line" id="crayon-57d04a2e1a3ec860526831-2"><span class="crayon-h">&nbsp;&nbsp;</span><span class="crayon-v">avi</span><span class="crayon-sy">.</span><span class="crayon-v">pool</span><span class="crayon-sy">.</span><span class="crayon-e">select</span><span class="crayon-sy">(</span><span class="crayon-sy">,</span><span class="crayon-h"> </span><span class="crayon-v">avi</span><span class="crayon-sy">.</span><span class="crayon-v">vs</span><span class="crayon-sy">.</span><span class="crayon-e">table_lookup</span><span class="crayon-sy">(</span><span class="crayon-v">avi</span><span class="crayon-sy">.</span><span class="crayon-v">http</span><span class="crayon-sy">.</span><span class="crayon-e">get_cookie</span><span class="crayon-sy">(</span><span class="crayon-s">"JSESSIONID"</span><span class="crayon-sy">)</span><span class="crayon-sy">)</span><span class="crayon-sy">)</span></div><div class="crayon-line" id="crayon-57d04a2e1a3ec860526831-3"><span class="crayon-st">end</span></div></div></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+<!-- [Format Time: 0.0006 seconds] -->
+
+
+  
+
+    <footer>
+      <hr/>
+      <div class="btn-group">
+
+
+
+<button type="button" class="btn btn-default">
+<time class="published" datetime="2016-05-01T19:00:54+00:00">last edit: May 4, 2016</time>
+</button>
+
+<button type="button" class="btn btn-default">
+<a href="/author/nathanavinetworks-com/" rel="author">Author: Nathan McMahon</a>
+</button>
+
+
+    
+
+  <div class="btn-group">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+      tagged      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        <li><a href="/tag/16-2/" rel="tag">16.2</a></li><li><a href="/tag/persistence/" rel="tag">persistence</a></li>    </ul>
+  </div>
+
+    <div class="btn-group">
+    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+      categorized      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        <li><a href="/category/script/datascript/" rel="tag">DataScript</a></li>    </ul>
+  </div>
+
+     </div>
+<div class="clearfix"></div>
+      
+
+      <!--<hr/>-->
+      
+
+
+ <section id="respond">
+    				<div id="respond" class="comment-respond">
+			<h3 id="reply-title" class="comment-reply-title">Leave a Reply <small><a rel="nofollow" id="cancel-comment-reply-link" href="/wp-login.php?redirect_to=https%3A%2F%2Fkb.avinetworks.com%2Fcustom-persistence-with-datascript%2F">logged in</a> to post a comment.</p>		</div><!-- #respond -->
+		  </section><!-- /#respond -->
+
+
+
+    </footer>
+
+    <hr/>
+
+      <div class="pull-left">&laquo; <a href="/terms-of-avi-vantage-license/" rel="prev">Terms of Avi Vantage Software License</a></div>
+      <div class="pull-right"><a href="/mesos-graceful-app-migration-in-dcos-cluster/" rel="next">Mesos - Graceful App Migration in DC/OS Cluster</a> &raquo;</div>
+
+      <div class="alignleft"></div>
+      <div class="alignright"></div>
+
+  </article>
+
+      </main><!-- /.main -->
+      <aside class="toc-sidebar">
+              </aside>
+    </div><!-- /.content -->
+  </div><!-- /.wrap -->
+
+
+<footer class="content-info " role="contentinfo" id="footer">
+
+  <div class="container">
+    <div class="row">
+      <div class="footer-left clearfix">
+          <ul id="menu-footer-menu" class="footer_menu"><li class="dropdown menu-solution"><a href="https://www.avinetworks.com/software-load-balancer-for-any-cloud">Solution</a>
+<ul class="submenu">
+	<li class="menu-any-cloud"><a href="https://www.avinetworks.com/software-load-balancer-for-any-cloud">Any Cloud</a></li>
+	<li class="menu-openstack"><a href="https://www.avinetworks.com/load-balancing-as-a-service-for-openstack">Openstack</a></li>
+	<li class="menu-sdn"><a href="https://www.avinetworks.com/application-services-for-sdn">SDN</a></li>
+	<li class="menu-microservices"><a href="https://www.avinetworks.com/container-services-fabric-for-microservices-apps">Microservices</a></li>
+</ul>
+</li>
+<li class="dropdown menu-product"><a href="https://www.avinetworks.com/product">Product</a>
+<ul class="submenu">
+	<li class="menu-overview"><a href="https://www.avinetworks.com/product">Overview</a></li>
+	<li class="menu-architecture"><a href="https://www.avinetworks.com/product-architecture">Architecture</a></li>
+	<li class="menu-benefits"><a href="https://www.avinetworks.com/product-benefits">Benefits</a></li>
+</ul>
+</li>
+<li class="dropdown menu-customers"><a href="https://www.avinetworks.com/customers">Customers</a>
+<ul class="submenu">
+	<li class="menu-overview"><a href="https://www.avinetworks.com/customers">Overview</a></li>
+</ul>
+</li>
+<li class="dropdown menu-partners"><a href="https://www.avinetworks.com/partners">Partners</a>
+<ul class="submenu">
+	<li class="menu-technology-partners"><a href="https://www.avinetworks.com/partners">Technology Partners</a></li>
+	<li class="menu-channel-partners"><a href="https://www.avinetworks.com/channel-partners">Channel Partners</a></li>
+</ul>
+</li>
+<li class="dropdown menu-resources"><a href="https://www.avinetworks.com/resources">Resources</a>
+<ul class="submenu">
+	<li class="menu-resource-center"><a href="https://www.avinetworks.com/resources">Resource Center</a></li>
+	<li class="menu-webinars"><a href="https://www.avinetworks.com/webinars">Webinars</a></li>
+	<li class="menu-knowledge-base"><a href="/">Knowledge Base</a></li>
+	<li class="menu-community"><a href="http://info.avinetworks.com/community">Community</a></li>
+</ul>
+</li>
+<li class="dropdown menu-company"><a href="https://www.avinetworks.com/about-us">Company</a>
+<ul class="submenu">
+	<li class="menu-about-us"><a href="https://avinetworks.com/about-us">About Us</a></li>
+	<li class="menu-management"><a href="https://avinetworks.com/management">Management</a></li>
+	<li class="menu-news"><a href="https://avinetworks.com/news">News</a></li>
+	<li class="menu-events"><a href="https://www.avinetworks.com/events">Events</a></li>
+	<li class="menu-careers"><a href="https://www.avinetworks.com/careers">Careers</a></li>
+	<li class="menu-contact-us"><a href="https://www.avinetworks.com/contact-us">Contact Us</a></li>
+	<li class="menu-blog"><a href="https://blog.avinetworks.com/">Blog</a></li>
+</ul>
+</li>
+</ul>      </div>
+      <div class="footer-right clearfix">
+
+        <ul class="social">
+          <li><a href="https://twitter.com/AviNetworks" target="_blank"><img src="https://avinetworks.com/client/s2.png?89422d04ce55ab4fbc551b350301fb40" alt="ss"></a></li>
+          <li><a href="https://www.linkedin.com/company/avi-networks-inc/" target="_blank"><img src="https://avinetworks.com/client/s3.png?9cfe2fb324a650a508672567111627bf" alt="ss"></a></li>
+          <li><a href="https://plus.google.com/104472305577528346993" target="_blank"><img src="https://avinetworks.com/client/s4.png?417ad5e01fe57c547c4fa97c04cf2fd5" alt="ss"></a></li>
+          <li><a href="https://www.facebook.com/Avi-Networks-454887554580101/" target="_blank"><img src="https://avinetworks.com/client/s5.png?ab5977728cb4c37649b5ae3644a2d1e6" alt="ss"></a></li>
+        </ul>
+
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container">
+    <div class="copyright-wrapper">
+      <div class="row">
+        <p><a href="/"><img src="/wp-content/themes/faq/assets/img/search.png?1d768c9a0f87329a1c04c078673ed642" alt="foot-logo" class="foot-logo"></a> Copyright © 2016 Avi Networks. All rights reserved.</p>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="container">
+     <div class="pull-right"><small>FAQ  is built by <a href="http://www.wpcustoms.net/" rel="designer" title="WPcustoms">WPcustoms</a></small></div>  </div>
+<br/>
+</footer>
+<script type='text/javascript'>
+var colomatduration = 'fast';
+var colomatdirection = 'left';
+var colomatslideEffect = 'slideToggle';
+var colomatcookielife = 7;
+</script><script type="text/javascript">var algolia = {"debug":false,"application_id":"272ZBU7KSH","search_api_key":"6fc3a75f0821308178cd612cfd4f8d2e","autocomplete":{"tmpl_footer":"autocomplete-footer","sources":[{"index_id":"terms_category","index_name":"wp_terms_category","label":"Categories","position":7,"max_suggestions":3,"tmpl_suggestion":"autocomplete-term-suggestion","tmpl_header":"autocomplete-header","enabled":true},{"index_id":"searchable_posts","index_name":"wp_searchable_posts","label":"Searchable posts","position":8,"max_suggestions":5,"tmpl_suggestion":"autocomplete-post-suggestion","tmpl_header":"autocomplete-header","enabled":true}]},"indices":{"searchable_posts":{"name":"wp_searchable_posts","id":"searchable_posts","enabled":true},"posts_post":{"name":"wp_posts_post","id":"posts_post","enabled":true},"posts_page":{"name":"wp_posts_page","id":"posts_page","enabled":true},"terms_category":{"name":"wp_terms_category","id":"terms_category","enabled":true}}}</script><script type="text/html" id="tmpl-autocomplete-header">
+	<div class="autocomplete-header">
+		<div class="autocomplete-header-title">{{ data.label }}</div>
+		<# if( data.more_link ) { #>
+			<div class="autocomplete-header-more">
+				<a href="{{ data.more_link }}">More</a>
+			</div>
+		<# } #>
+		<div class="clear"></div>
+	</div>
+</script>
+<script type="text/html" id="tmpl-autocomplete-post-suggestion">
+	<a class="suggestion-link" href="{{ data.permalink }}">
+		<# if ( data.thumbnail_url ) { #>
+			<img class="suggestion-post-thumbnail" src="{{ data.thumbnail_url }}" alt="{{ data.post_title }}">
+		<# } #>
+    <div class="suggestion-post-attributes">
+  		<span class="suggestion-post-title">{{{ data._highlightResult.post_title.value }}}</span>
+
+		<#
+			var attributes = ['content', 'title6', 'title5', 'title4', 'title3', 'title2', 'title1'];
+			var attribute_name;
+			var relevant_content = '';
+			for ( var index in attributes ) {
+				attribute_name = attributes[ index ];
+				if ( data._highlightResult[ attribute_name ].matchedWords.length > 0 ) {
+					relevant_content = data._snippetResult[ attribute_name ].value;
+					break;
+				}
+			}
+
+			if ( relevant_content === '') {
+				relevant_content = data._snippetResult[ attributes[ 0 ] ].value;
+			}
+		#>
+		<span class="suggestion-post-content">{{{ relevant_content }}}</span>
+    </div>
+	</a>
+</script>
+<script type="text/html" id="tmpl-autocomplete-term-suggestion">
+	<a class="suggestion-link" href="{{ data.permalink }}">
+		
+		<svg viewBox="0 0 21 21" width="21" height="21"><svg width="21" height="21" viewBox="0 0 21 21"><path d="M4.662 8.72l-1.23 1.23c-.682.682-.68 1.792.004 2.477l5.135 5.135c.7.693 1.8.688 2.48.005l1.23-1.23 5.35-5.346c.31-.31.54-.92.51-1.36l-.32-4.29c-.09-1.09-1.05-2.06-2.15-2.14l-4.3-.33c-.43-.03-1.05.2-1.36.51l-.79.8-2.27 2.28-2.28 2.27zm9.826-.98c.69 0 1.25-.56 1.25-1.25s-.56-1.25-1.25-1.25-1.25.56-1.25 1.25.56 1.25 1.25 1.25z" fill-rule="evenodd"></path></svg></svg>
+
+		<span class="suggestion-post-title">{{{ data._highlightResult.name.value }}}</span>
+	</a>
+</script>
+<script type="text/html" id="tmpl-autocomplete-user-suggestion">
+	<a class="suggestion-link user-suggestion-link" href="{{ data.posts_url }}">
+		<# if ( data.avatar_url ) { #>
+			<img class="suggestion-user-thumbnail" src="{{ data.avatar_url }}" alt="{{ data.display_name }}">
+		<# } #>
+			
+		<span class="suggestion-post-title">{{{ data._highlightResult.display_name.value }}}</span>
+	</a>
+</script>
+<script type="text/html" id="tmpl-autocomplete-footer">
+	<div class="autocomplete-footer">
+		<div class="autocomplete-footer-branding">
+			Powered by			<a href="#" class="algolia-powered-by-link" title="Algolia">
+				<img class="algolia-logo" src="https://www.algolia.com/assets/algolia128x40.png" alt="Algolia" />
+			</a>
+		</div>
+	</div>
+</script>
+
+<script type="text/html" id="tmpl-autocomplete-empty">
+	<div class="autocomplete-empty">
+		Sorry but there are not results for :		{{ data.query }}
+	</div>
+</script>
+<script type='text/javascript' src='/wp-includes/js/jquery/ui/effect.min.js?ver=1.11.4'></script>
+<script type='text/javascript' src='/wp-includes/js/jquery/ui/effect-slide.min.js?ver=1.11.4'></script>
+<script type='text/javascript' src='/wp-content/plugins/collapse-pro-matic/js/collapsepro.js?ver=1.5.6'></script>
+<script type='text/javascript'>
+/* <![CDATA[ */
+var tocplus = {"smooth_scroll":"1","smooth_scroll_offset":"130"};
+/* ]]> */
+</script>
+<script type='text/javascript' src='/wp-content/plugins/table-of-contents-plus/front.min.js?ver=1509'></script>
+<script type='text/javascript' src='/wp-includes/js/comment-reply.min.js?ver=4.5.3'></script>
+<script type='text/javascript' src='/wp-includes/js/wp-embed.min.js?ver=4.5.3'></script>
+<!-- Start of Google Analytics Code -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-38085992-3', 'auto');
+  ga('send', 'pageview');
+
+</script>
+<!-- End of Google Analytics Code -->
+<!-- Start of Async HubSpot Analytics Code -->
+<script type="text/javascript">
+  (function(d,s,i,r) {
+    if (d.getElementById(i)){return;}
+    var n=d.createElement(s),e=d.getElementsByTagName(s)[0];
+    n.id=i;n.src='//js.hs-analytics.net/analytics/'+(Math.ceil(new Date()/r)*r)+'/443964.js';
+    e.parentNode.insertBefore(n, e);
+  })(document,"script","hs-analytics",300000);
+</script>
+<!-- End of Async HubSpot Analytics Code -->
+<!-- Start of LeadLander Analytics Code -->
+<script type="text/javascript" language="javascript">
+  var sf14gv = 28239;
+  (function() {
+    var sf14g = document.createElement('script'); sf14g.type = 'text/javascript'; sf14g.async = true;
+    sf14g.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 't.sf14g.com/sf14g.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sf14g, s);
+  })();
+</script>
+<!-- End of LeadLander Analytics Code -->
+<script async type="text/javascript" src="/_avirum_/AVIi04E757D04A2E0007AVIl0AVIr1/rum.js"></script></body>
+</html>

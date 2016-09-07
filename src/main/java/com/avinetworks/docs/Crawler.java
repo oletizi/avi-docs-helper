@@ -23,11 +23,14 @@ import java.io.PrintWriter;
 import java.net.URL;
 
 public class Crawler extends WebCrawler {
+  private static final String HOSTNAME = "kbdev.avinetworks.com";
   //private final String outputDir = "/tmp/doc2md";
   private final File outputDir;
-  public static final String HOSTNAME = "kbdev.avinetworks.com";
+  //private static final String HOSTNAME = "kbdev.avinetworks.com";
+  private Filter filter;
 
-  public Crawler() {
+  Crawler(final Filter filter) {
+    this.filter = filter;
     outputDir = new File("/tmp/avi-docs/src/site/");
     try {
       FileUtils.forceMkdir(outputDir);
@@ -39,19 +42,7 @@ public class Crawler extends WebCrawler {
   @Override
   public boolean shouldVisit(final Page referringPage, final WebURL url) {
     // info("shouldVisit: referringPage: " + referringPage + ", url: " + url);
-    String href = url.getURL().toLowerCase();
-
-    return href.contains("https://" + HOSTNAME + "/")
-        && !href.contains(HOSTNAME + "/wp-content/")
-        && !href.contains(HOSTNAME + "/wp-json/")
-        && !href.contains(HOSTNAME + "/tag/")
-        && !href.contains(HOSTNAME + "/author/")
-        && !href.contains(HOSTNAME + "/category/")
-        && !href.endsWith(".png")
-        && !href.endsWith(".gif")
-        && !href.endsWith(".jpg")
-        && !href.endsWith(".jpeg")
-        ;
+    return filter.filter(url);
   }
 
   @Override
@@ -170,7 +161,13 @@ public class Crawler extends WebCrawler {
          * Start the crawl. This is a blocking operation, meaning that your code
          * will reach the line after this only when crawling is finished.
          */
-    controller.start(Crawler.class, numberOfCrawlers);
+
+    controller.start(new CrawlController.WebCrawlerFactory<Crawler>() {
+                       public Crawler newInstance() throws Exception {
+                         return new Crawler(new HostFilter(HOSTNAME));
+                       }
+                     },
+        numberOfCrawlers);
 
   }
 
