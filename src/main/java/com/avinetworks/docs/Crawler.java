@@ -15,6 +15,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -24,9 +26,9 @@ import java.net.URL;
 
 public class Crawler extends WebCrawler {
   private static final String HOSTNAME = "kbdev.avinetworks.com";
-  //private final String outputDir = "/tmp/doc2md";
+  private static final Logger logger = LoggerFactory.getLogger(Crawler.class);
+  private static final boolean DEBUG = true;
   private final File outputDir;
-  //private static final String HOSTNAME = "kbdev.avinetworks.com";
   private Filter filter;
 
   Crawler(final Filter filter, final File outputDir) {
@@ -41,7 +43,6 @@ public class Crawler extends WebCrawler {
 
   @Override
   public boolean shouldVisit(final Page referringPage, final WebURL url) {
-    // info("shouldVisit: referringPage: " + referringPage + ", url: " + url);
     return filter.filter(url);
   }
 
@@ -135,7 +136,7 @@ public class Crawler extends WebCrawler {
   }
 
   private void info(final String msg) {
-    System.out.println(getClass().getSimpleName() + ": " + msg);
+    logger.info(getClass().getSimpleName() + ": " + msg);
   }
 
   public static void main(String[] args) throws Exception {
@@ -153,12 +154,27 @@ public class Crawler extends WebCrawler {
     RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
     CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
 
+    final String seedURL;
+    final Filter filter;
+    if (DEBUG) {
+      seedURL = "https://" + HOSTNAME + "/custom-persistence-with-datascript/";
+      filter = new Filter() {
+        @Override
+        public boolean filter(WebURL url) {
+          return seedURL.equals(url.getURL());
+        }
+      };
+    } else {
+      seedURL = "https://" + HOSTNAME + "/";
+      filter = new HostFilter(HOSTNAME);
+    }
+
         /*
          * For each crawl, you need to add some seed urls. These are the first
          * URLs that are fetched and then the crawler starts following links
          * which are found in these pages
          */
-    controller.addSeed("https://" + HOSTNAME + "/");
+    controller.addSeed(seedURL);
 
         /*
          * Start the crawl. This is a blocking operation, meaning that your code
@@ -166,12 +182,10 @@ public class Crawler extends WebCrawler {
          */
     final File outputDir = new File("/tmp/avi-docs/src/site/");
 
-    controller.start(new CrawlController.WebCrawlerFactory<Crawler>() {
-                       public Crawler newInstance() throws Exception {
-                         return new Crawler(new HostFilter(HOSTNAME), outputDir);
-                       }
-                     },
-        numberOfCrawlers);
+
+    controller.start(() -> {
+      return new Crawler(filter, outputDir);
+    }, numberOfCrawlers);
 
   }
 
