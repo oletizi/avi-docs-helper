@@ -24,15 +24,6 @@ Active health monitors proactively send queries to servers, synthetically mimick
 
 Active health monitors originate from the Service Engines hosting the virtual service. Each SE must be able to send monitors to the servers, which ensures there are no routing or intermediate networking issues that might prevent access to a server from all active Service Engines. If one SE marks a server up and another SE marks a server down, each SE will include or exclude the server from load balancing according to their local monitor results.
 
-The following are configurable active health monitors:
-
-* <a href="/dns-health-monitor/">DNS Monitor</a>
-* <a href="/external-health-monitor/">External Monitor</a>
-* <a href="/http-health-monitor/">HTTP Monitor</a>
-* <a href="/https-health-monitor/">HTTPS Monitor</a>
-* <a href="/ping-health-monitor/">Ping Monitor</a>
-* <a href="/tcp-health-monitor/">TCP Monitor</a>
-* <a href="/udp-health-monitor/">UDP Monitor</a>
 
 ### Passive Health Monitor
 

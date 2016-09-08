@@ -95,7 +95,6 @@ By default, Vantage does not include health monitor traffic when performing pack
  </tbody> 
 </table>
 
-See <a href="/packet-capture/">Packet Capture</a> for more help on this topic.
 
 ### Via Manual Test
 
