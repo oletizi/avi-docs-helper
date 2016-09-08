@@ -120,7 +120,7 @@ public class Crawler extends WebCrawler {
     crayon.removeAttr("class");
     crayon.removeAttr("style");
     crayon.removeAttr("data-settings");
-    crayon.html("<code class=\"language-lua\">\n" + text + "\n</code>");
+    crayon.html("<code class=\"language-lua\">" + text + "</code>");
   }
 
   private void snarfImages(Elements article, File outDir) throws IOException {
