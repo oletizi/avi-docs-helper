@@ -18,12 +18,13 @@ import java.util.Iterator;
  */
 public class Mover {
 
-  private static final Logger logger = LoggerFactory.getLogger(Mover.class);
+  //private static final Logger logger = LoggerFactory.getLogger(Mover.class);
+  private final MoveLog log;
   private File docroot;
 
-  public Mover(File docroot) {
-
+  public Mover(File docroot) throws IOException {
     this.docroot = docroot;
+    log = new MoveLog(new File(docroot, ".move.log"));
   }
 
   public void move(String source, String dest) throws IOException {
@@ -43,6 +44,7 @@ public class Mover {
     }
 
     updateLinksTo(sourceFile, destFile);
+    getMoveLog().logMove(source, dest);
   }
 
   private void updateLinksTo(final File sourceFile, final File destFile) throws IOException {
@@ -66,7 +68,6 @@ public class Mover {
         if (anchor.hasAttr("href")) {
           // this is a link
           final String link = anchor.attr("href");
-          logger.info("  Examining link: " + link);
           String newLink = null;
           if (link.startsWith("http") || link.startsWith("ftp")) {
             // This is an external link. Nothing to do.
@@ -94,5 +95,9 @@ public class Mover {
         FileUtils.fileWrite(md.getAbsolutePath(), doc.outerHtml());
       }
     }
+  }
+
+  public MoveLog getMoveLog() {
+    return log;
   }
 }

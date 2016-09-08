@@ -3,7 +3,6 @@ package com.avinetworks.docs;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.apache.commons.vfs2.FileFilter;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -19,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Iterator;
 
 import static org.junit.Assert.*;
@@ -62,6 +60,28 @@ public class MoverTest {
   @After
   public void after() throws Exception {
     assertLinkIntegrity();
+  }
+
+  @Test
+  public void testMoveLog() throws Exception {
+    MoveLog moveLog = mover.getMoveLog();
+    assertEquals(0, moveLog.getEntries().size());
+
+    final String src = "/servers-flapping-up-down";
+    final String dest = "/moved";
+
+    testRename(src, dest);
+
+    assertEquals(1, moveLog.getEntries().size());
+    MoveLog.MoveLogEntry entry = moveLog.getEntries().get(0);
+    assertEquals(src, entry.getSrc());
+    assertEquals(dest, entry.getDest());
+
+    // make sure the move log spans Mover instantiations
+    mover = new Mover(docroot);
+    moveLog = mover.getMoveLog();
+    assertEquals(1, moveLog.getEntries().size());
+
   }
 
   @Test
@@ -133,8 +153,7 @@ public class MoverTest {
           if (link.startsWith("http")) {
             final URL url = new URL(link);
             fail("Implement me!");
-          }
-          else if (link.startsWith("/")) {
+          } else if (link.startsWith("/")) {
             // this is an absolute link
             final File target = new File(docroot, link);
             assertTrue("Target for link doesn't exist!\n  link   : " + link + "\n  target : " + target + "\n  in file: " + md, target.exists());
