@@ -100,4 +100,22 @@ public class Mover {
   public MoveLog getMoveLog() {
     return log;
   }
+
+  public static void main(final String[] args) throws Exception {
+    if (args.length < 2) {
+      System.out.print(usage());
+    } else {
+      // create a new Mover and perform the move
+      final String src = args[0];
+      final String dest = args[1];
+      final File docroot = new File(System.getProperty("user.dir"));
+      new Mover(docroot).move(src, dest);
+    }
+  }
+
+  private static String usage() {
+    String rv =  "Mover -- moves files\n\n";
+    rv += "Usage:\n\t Mover <source> <dest>\n\nNote: use only from the document root.\n\n";
+    return rv;
+  }
 }

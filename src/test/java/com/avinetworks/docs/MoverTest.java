@@ -1,5 +1,6 @@
 package com.avinetworks.docs;
 
+import net.didion.jwnl.data.Exc;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -60,6 +61,24 @@ public class MoverTest {
   @After
   public void after() throws Exception {
     assertLinkIntegrity();
+  }
+
+  @Test
+  public void testMain() throws Exception {
+    final String src = "/servers-flapping-up-down";
+    final String dest = "/moved";
+    final String[] args = new String[] {src, dest};
+    System.setProperty("user.dir", docroot.getAbsolutePath());
+
+    final File srcFile = new File(docroot, src);
+    final File destFile = new File(docroot, dest);
+    assertTrue(srcFile.isDirectory());
+    assertFalse(destFile.exists());
+
+    Mover.main(args);
+
+    assertFalse(srcFile.exists());
+    assertTrue(destFile.exists());
   }
 
   @Test
