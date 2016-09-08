@@ -157,7 +157,7 @@ public class Crawler extends WebCrawler {
   }
 
 
-  private static final boolean DEBUG = false;
+  private static final boolean DEBUG = true;
 
   public static void main(String[] args) throws Exception {
     String crawlStorageFolder = "/tmp/crawler/";
@@ -177,7 +177,7 @@ public class Crawler extends WebCrawler {
     final String seedURL;
     final Filter filter;
     if (DEBUG) {
-      seedURL = "https://" + HOSTNAME + "/virtual-service-and-pool-create-from-cli/";
+      seedURL = "https://" + HOSTNAME + "/docs/cli-guide/";
       filter = url -> seedURL.equals(url.getURL());
     } else {
       seedURL = "https://" + HOSTNAME + "/";

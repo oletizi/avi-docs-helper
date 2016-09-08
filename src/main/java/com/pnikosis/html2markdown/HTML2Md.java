@@ -222,6 +222,7 @@ public class HTML2Md {
   }
 
   private static void pre(Element element, ArrayList<MDLine> lines) {
+    element.removeAttr("crayon");
     passthrough(element, lines);
   }
 
