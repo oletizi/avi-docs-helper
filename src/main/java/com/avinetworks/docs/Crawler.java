@@ -11,6 +11,7 @@ import edu.uci.ics.crawler4j.url.WebURL;
 import com.pnikosis.html2markdown.HTML2Md;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -27,7 +28,6 @@ import java.net.URL;
 public class Crawler extends WebCrawler {
   private static final String HOSTNAME = "kbdev.avinetworks.com";
   private static final Logger logger = LoggerFactory.getLogger(Crawler.class);
-  private static final boolean DEBUG = true;
   private final File outputDir;
   private Filter filter;
 
@@ -66,7 +66,7 @@ public class Crawler extends WebCrawler {
         // Extract title
         Elements titleElement = doc.select("h1.faq-title");
         // chuck the title, now that we know what it is
-        final String title = titleElement.text();
+        final String title = titleElement.text().replaceAll(":", "&#58;");
         titleElement.remove();
 
         // Extract just the article content
@@ -156,6 +156,9 @@ public class Crawler extends WebCrawler {
     logger.info(getClass().getSimpleName() + ": " + msg);
   }
 
+
+  private static final boolean DEBUG = true;
+
   public static void main(String[] args) throws Exception {
     String crawlStorageFolder = "/tmp/crawler/";
     int numberOfCrawlers = 10;
@@ -174,7 +177,7 @@ public class Crawler extends WebCrawler {
     final String seedURL;
     final Filter filter;
     if (DEBUG) {
-      seedURL = "https://" + HOSTNAME + "/custom-persistence-with-datascript/";
+      seedURL = "https://" + HOSTNAME + "/virtual-service-creation-vmware/";
       filter = url -> seedURL.equals(url.getURL());
     } else {
       seedURL = "https://" + HOSTNAME + "/";

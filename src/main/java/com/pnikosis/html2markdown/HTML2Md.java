@@ -390,6 +390,10 @@ public class HTML2Md {
 
   private static void li(Element element, ArrayList<MDLine> lines) {
     MDLine line;
+    Element child = element.child(0);
+    if ("p".equals(child.tagName())) {
+      child.tagName("span");
+    }
     if (orderedList) {
       line = new MDLine(MDLineType.Ordered, indentation,
           getTextContent(element));
