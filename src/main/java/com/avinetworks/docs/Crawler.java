@@ -63,23 +63,28 @@ public class Crawler extends WebCrawler {
 
 
         final Document doc = Jsoup.parse(content);
+        // Extract title
         Elements titleElement = doc.select("h1.faq-title");
         // chuck the title, now that we know what it is
         final String title = titleElement.text();
         titleElement.remove();
-        // extract title: h1.faq-title
-        // content: main.main
+
+        // Extract just the article content
         Elements article = doc.select("article");
         article.select("footer").remove();
         article.select("small").remove();
 
+        // Clean up anchors and images
         article.select("a, img").removeAttr("class").removeAttr("id");
         article.select("a").removeAttr("target");
 
+        // Unwind the crayon gunk
+        unwindCrayon(article);
+
+        // Put referenced images in a directory local to the page
         snarfImages(article, outDir);
 
         // TODO:
-        // - Deal with tables
         // - Find out why some pages don't render
         // - Deal with CLI
         // - Deal with DataScript
@@ -104,6 +109,18 @@ public class Crawler extends WebCrawler {
       throw new RuntimeException(e);
     }
 
+  }
+
+  private void unwindCrayon(Elements article) {
+    final Elements crayon = article.select("div.crayon-syntax");
+    final Elements textArea = crayon.select("textarea.crayon-plain");
+    final String text = textArea.text();
+    crayon.tagName("pre");
+    crayon.removeAttr("id");
+    crayon.removeAttr("class");
+    crayon.removeAttr("style");
+    crayon.removeAttr("data-settings");
+    crayon.html("<code class=\"language-lua\">\n" + text + "\n</code>");
   }
 
   private void snarfImages(Elements article, File outDir) throws IOException {
@@ -158,12 +175,7 @@ public class Crawler extends WebCrawler {
     final Filter filter;
     if (DEBUG) {
       seedURL = "https://" + HOSTNAME + "/custom-persistence-with-datascript/";
-      filter = new Filter() {
-        @Override
-        public boolean filter(WebURL url) {
-          return seedURL.equals(url.getURL());
-        }
-      };
+      filter = url -> seedURL.equals(url.getURL());
     } else {
       seedURL = "https://" + HOSTNAME + "/";
       filter = new HostFilter(HOSTNAME);
@@ -180,7 +192,7 @@ public class Crawler extends WebCrawler {
          * Start the crawl. This is a blocking operation, meaning that your code
          * will reach the line after this only when crawling is finished.
          */
-    final File outputDir = new File("/tmp/avi-docs/src/site/");
+    final File outputDir = new File("/Users/orion/work/workspace/avi-docs/src/site/");
 
 
     controller.start(() -> {

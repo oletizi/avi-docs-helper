@@ -70,7 +70,35 @@ public class CrawlerTest {
 
   @org.junit.Test
   public void testTable() throws Exception {
-    final String content = urlToString(ClassLoader.getSystemResource("html/table-and-datascript.html"));
+    File markdown = snarf("html/table-and-datascript.html");
+
+    Document doc = Jsoup.parse(FileUtils.readFileToString(markdown, "UTF-8"));
+    Elements table = doc.select("table");
+    assertTrue(table.size() > 0);
+  }
+
+
+  @org.junit.Test
+  public void testDataScript() throws Exception {
+    File markdown = snarf("html/table-and-datascript.html");
+    String markdownText = FileUtils.readFileToString(markdown, "UTF-8");
+    Document doc = Jsoup.parse(markdownText);
+
+    logger.info("Markdown: " + markdownText);
+
+    Elements pre = doc.select("pre");
+    assertTrue(pre.size() > 0);
+
+    assertEquals("", pre.attr("id"));
+    assertEquals("", pre.attr("class"));
+    assertEquals("", pre.attr("style"));
+    assertEquals("", pre.attr("data-settings"));
+
+  }
+
+  private File snarf(String snarfResource) throws Exception {
+    final String content = urlToString(ClassLoader.getSystemResource(snarfResource));
+
     assertNotNull(content);
 
     // start the embedded webserver
@@ -104,20 +132,11 @@ public class CrawlerTest {
     //  Start the crawl. This is a blocking operation, meaning that your code
     //  will reach the line after this only when crawling is finished.
 
-
-    controller.start(new WebCrawlerFactory<Crawler>() {
-      public Crawler newInstance() throws Exception {
-        return crawler;
-      }
-    }, 1);
+    controller.start(() -> crawler, 1);
 
     String[] outFiles = outDir.list();
     assertEquals(1, outFiles.length);
-    File markdown = new File(outDir, outFiles[0]);
-
-    Document doc = Jsoup.parse(FileUtils.readFileToString(markdown, "UTF-8"));
-    Elements table = doc.select("table");
-    assertTrue(table.size() > 0);
+    return new File(outDir, outFiles[0]);
   }
 
   private int startServer(final String content) throws IOException {

@@ -203,6 +203,8 @@ public class HTML2Md {
       a(element, lines);
     } else if (tagName.equals("img")) {
       img(element, lines);
+    } else if (tagName.equals("pre")) {
+      pre(element, lines);
     } else if (tagName.equals("code")) {
       code(element, lines);
     } else if (tagName.equals("ul")) {
@@ -219,7 +221,15 @@ public class HTML2Md {
     }
   }
 
+  private static void pre(Element element, ArrayList<MDLine> lines) {
+    passthrough(element, lines);
+  }
+
   private static void table(Element element, ArrayList<MDLine> lines) {
+    passthrough(element, lines);
+  }
+
+  private static void passthrough(Element element, ArrayList<MDLine> lines) {
     getLastLine(lines).append(element.outerHtml());
   }
 
@@ -348,11 +358,12 @@ public class HTML2Md {
   }
 
   private static void code(Element element, ArrayList<MDLine> lines) {
-    lines.add(new MDLine(MDLineType.None, 0, ""));
-    MDLine line = new MDLine(MDLineType.None, 0, "    ");
-    line.append(getTextContent(element).replace("\n", "    "));
-    lines.add(line);
-    lines.add(new MDLine(MDLineType.None, 0, ""));
+    passthrough(element, lines);
+//    lines.add(new MDLine(MDLineType.None, 0, ""));
+//    MDLine line = new MDLine(MDLineType.None, 0, "    ");
+//    line.append(getTextContent(element).replace("\n", "    "));
+//    lines.add(line);
+//    lines.add(new MDLine(MDLineType.None, 0, ""));
   }
 
   private static void ul(Element element, ArrayList<MDLine> lines) {
