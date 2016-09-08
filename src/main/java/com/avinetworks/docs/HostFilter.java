@@ -17,6 +17,7 @@ public class HostFilter implements Filter {
         && !href.contains(hostname + "/tag/")
         && !href.contains(hostname + "/author/")
         && !href.contains(hostname + "/category/")
+        && !href.contains(hostname + "/page/")
         && !href.endsWith(".png")
         && !href.endsWith(".gif")
         && !href.endsWith(".jpg")

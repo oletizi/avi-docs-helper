@@ -85,9 +85,6 @@ public class Crawler extends WebCrawler {
         snarfImages(article, outDir);
 
         // TODO:
-        // - Find out why some pages don't render
-        // - Deal with CLI
-        // - Deal with DataScript
         // - Make a "move" script that moves pages while preserving link integrity
         // - Generalize avi-docs-snarfer to be a tools project
 
@@ -157,7 +154,7 @@ public class Crawler extends WebCrawler {
   }
 
 
-  private static final boolean DEBUG = true;
+  private static final boolean DEBUG = false;
 
   public static void main(String[] args) throws Exception {
     String crawlStorageFolder = "/tmp/crawler/";
