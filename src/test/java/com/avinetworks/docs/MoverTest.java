@@ -160,17 +160,18 @@ public class MoverTest {
     }
     final File movedTo = mover.move(source, dest);
     logger.info("Final destination:\n  source  : " + sourceDir + "\n  dest    : " + destDir + "\n  moved to: " + movedTo);
-    assertTrue("File moved to doesn't exist:\n  source: " + source + "\n  dest : " + dest + "\n  moved to: " + movedTo, movedTo.exists());
     if (assertExistenceConditions) {
+      assertTrue("File moved to doesn't exist:\n  source: " + source + "\n  dest : " + dest + "\n  moved to: " + movedTo, movedTo.exists());
       assertFalse(sourceDir.exists());
       assertTrue(movedTo.isDirectory());
     }
+    if (movedTo != null) {
+      assertFileInDirectory(movedTo, "index.md");
+      assertFileInDirectory(movedTo, "img");
 
-    assertFileInDirectory(movedTo, "index.md");
-    assertFileInDirectory(movedTo, "img");
-
-    File imgDir = new File(movedTo, "img");
-    assertFileInDirectory(imgDir, "HealthMonitor2.png");
+      File imgDir = new File(movedTo, "img");
+      assertFileInDirectory(imgDir, "HealthMonitor2.png");
+    }
   }
 
 
@@ -238,9 +239,9 @@ public class MoverTest {
       for (String name : dir.list()) {
         msg += "    " + name + "\n";
       }
-    } else if (dir.isFile()){
+    } else if (dir.isFile()) {
       msg += "  directory is actually a file";
-    } else if (!dir.exists()){
+    } else if (!dir.exists()) {
       msg += "  directory doesn't exist";
     }
     assertEquals(msg, 1, dir.list((dir1, name) -> cleanFilename.equals(name)).length);
