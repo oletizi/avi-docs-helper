@@ -104,6 +104,20 @@ public class MoverTest {
   }
 
   @Test
+  public void testSourceDoesntExist() throws Exception {
+    String source = "l;aksdjfal;";
+    String dest = "/docs/";
+    testRename(source, dest, false);
+  }
+
+  @Test
+  public void testMoveFile() throws Exception {
+    String source = "health-monitor-troubleshooting/index.md";
+    String dest = "health-monitor-troubleshooting/index.moved";
+    testRename(source, dest);
+  }
+
+  @Test
   public void testMoveToNewDirectory() throws Exception {
     // test move directory to another directory
     String source = "/manually-validate-server-health";
@@ -152,25 +166,27 @@ public class MoverTest {
   }
 
   private void testRename(String source, String dest, boolean assertExistenceConditions) throws IOException {
-    File sourceDir = new File(docroot, source);
-    File destDir = new File(docroot, dest);
+    File sourceFile = new File(docroot, source);
+    File destFile = new File(docroot, dest);
     if (assertExistenceConditions) {
-      assertTrue("Not a directory: " + sourceDir, sourceDir.isDirectory());
-      assertFalse(destDir.exists());
+      assertTrue("Source doesn't exist: " + sourceFile, sourceFile.exists());
+      assertFalse(destFile.exists());
     }
     final File movedTo = mover.move(source, dest);
-    logger.info("Final destination:\n  source  : " + sourceDir + "\n  dest    : " + destDir + "\n  moved to: " + movedTo);
+    logger.info("Final destination:\n  source  : " + sourceFile + "\n  dest    : " + destFile + "\n  moved to: " + movedTo);
     if (assertExistenceConditions) {
       assertTrue("File moved to doesn't exist:\n  source: " + source + "\n  dest : " + dest + "\n  moved to: " + movedTo, movedTo.exists());
-      assertFalse(sourceDir.exists());
-      assertTrue(movedTo.isDirectory());
+      assertFalse(sourceFile.exists());
+      assertTrue(movedTo.exists());
     }
-    if (movedTo != null) {
+    if (movedTo != null && movedTo.isDirectory()) {
       assertFileInDirectory(movedTo, "index.md");
       assertFileInDirectory(movedTo, "img");
 
       File imgDir = new File(movedTo, "img");
       assertFileInDirectory(imgDir, "HealthMonitor2.png");
+    } else if (movedTo != null) {
+      assertTrue("Moved to doesn't exist: " + movedTo, movedTo.exists());
     }
   }
 

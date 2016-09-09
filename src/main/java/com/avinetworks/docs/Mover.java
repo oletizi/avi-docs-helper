@@ -29,6 +29,10 @@ public class Mover {
 
   public File move(String source, String dest) throws IOException {
     final File sourceFile = new File(docroot, source);
+    if (! sourceFile.exists()) {
+      System.out.println("Source does not exist: " + sourceFile);
+      return null;
+    }
     final File destFile = new File(docroot, dest);
     File movedTo = null;
     if (sourceFile.getCanonicalPath().equals(destFile.getCanonicalPath())) {
