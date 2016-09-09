@@ -27,24 +27,32 @@ public class Mover {
     log = new MoveLog(new File(docroot, ".move.log"));
   }
 
-  public void move(String source, String dest) throws IOException {
+  public File move(String source, String dest) throws IOException {
     final File sourceFile = new File(docroot, source);
     final File destFile = new File(docroot, dest);
-
-    if (dest.endsWith("/")) {
+    File movedTo = null;
+    if (sourceFile.getCanonicalPath().equals(destFile.getCanonicalPath())) {
+      System.out.println("Source and destination are the same. Cowardly refusing to do anything.\n  source: "
+          + sourceFile + "\n  dest  : " + destFile);
+      return null;
+    }
+    if (dest.endsWith("/") || destFile.isDirectory()) {
       // we're moving the source into the directory dest
       FileUtils.forceMkdir(destFile);
       File destDir = new File(destFile, source);
+      movedTo = destDir;
       FileUtils.forceMkdir(destDir);
-      FileUtils.copyDirectory(sourceFile, destDir);
+      FileUtils.copyDirectoryStructure(sourceFile, destDir);
       FileUtils.forceDelete(sourceFile);
     } else {
       // we're renaming the source to dest
       FileUtils.rename(sourceFile, destFile);
+      movedTo = destFile;
     }
 
     updateLinksTo(sourceFile, destFile);
     getMoveLog().logMove(source, dest);
+    return movedTo;
   }
 
   private void updateLinksTo(final File sourceFile, final File destFile) throws IOException {
@@ -108,13 +116,13 @@ public class Mover {
       // create a new Mover and perform the move
       final String src = args[0];
       final String dest = args[1];
-      final File docroot = new File(System.getProperty("user.dir"));
+      final File docroot = new File(System.getProperty("docroot"));
       new Mover(docroot).move(src, dest);
     }
   }
 
   private static String usage() {
-    String rv =  "Mover -- moves files\n\n";
+    String rv = "Mover -- moves files\n\n";
     rv += "Usage:\n\t Mover <source> <dest>\n\nNote: use only from the document root.\n\n";
     return rv;
   }

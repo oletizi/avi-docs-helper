@@ -4,7 +4,7 @@
 
   <groupId>com.avinetworks.docs</groupId>
   <artifactId>avi-docs-snarfer</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.1</version>
   <packaging>jar</packaging>
 
   <name>avi-docs-snarfer</name>
@@ -24,6 +24,24 @@
           <source>1.8</source>
           <target>1.8</target>
         </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.6</version>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+        <executions>
+          <execution>
+            <id>make-assembly</id> <!-- this is used for inheritance merges -->
+            <phase>package</phase> <!-- bind to the packaging phase -->
+            <goals>
+              <goal>single</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
@@ -49,14 +67,14 @@
       <version>2.5</version>
     </dependency>
     <!--<dependency>-->
-      <!--<groupId>com.pnikosis.com.pnikosis.html2markdown</groupId>-->
-      <!--<artifactId>jhtml2md</artifactId>-->
+    <!--<groupId>com.pnikosis.com.pnikosis.html2markdown</groupId>-->
+    <!--<artifactId>jhtml2md</artifactId>-->
     <!--</dependency>-->
 
     <!--<dependency>-->
-      <!--<groupId>edu.uci.ics</groupId>-->
-      <!--<artifactId>crawler4j</artifactId>-->
-      <!--<version>4.2</version>-->
+    <!--<groupId>edu.uci.ics</groupId>-->
+    <!--<artifactId>crawler4j</artifactId>-->
+    <!--<version>4.2</version>-->
     <!--</dependency>-->
     <!-- https://mvnrepository.com/artifact/com.sleepycat/je -->
     <dependency>
