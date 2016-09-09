@@ -142,6 +142,11 @@ public class MoverTest {
     testRename("servers-flapping-up-down", "overview-of-health-monitors", false);
   }
 
+  @Test
+  public void testMoveToExistingTarget() throws Exception {
+    testRename("servers-flapping-up-down", "overview-of-health-monitors/", false);
+  }
+
   private void testRename(String source, String dest) throws Exception {
     testRename(source, dest, true);
   }
