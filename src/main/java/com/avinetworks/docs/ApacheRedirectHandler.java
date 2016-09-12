@@ -26,8 +26,8 @@ class ApacheRedirectHandler implements RedirectHandler {
 
   @Override
   public void notifyRedirect(File oldLocation, File newLocation) throws IOException {
-    final String oldPath = oldLocation.getCanonicalPath().replace(docroot.getCanonicalPath(), "");
-    final String newPath = newLocation.getCanonicalPath().replace(docroot.getCanonicalPath(), "");
+    final String oldPath = oldLocation.getAbsolutePath().replace(docroot.getAbsolutePath(), "");
+    final String newPath = newLocation.getAbsolutePath().replace(docroot.getAbsolutePath(), "");
 
     final String redirect = "Redirect 301 " + oldPath + " " + newPath;
     final PrintWriter out;

@@ -27,11 +27,11 @@ public class MoveLog {
 
   public void logMove(final String src, final String dest) throws IOException {
     entries.add(new MoveLogEntry(src, dest, new DateTime()));
-    mapper.writeValue(file, entries);
+    mapper.writerWithDefaultPrettyPrinter().writeValue(file, entries);
   }
 
   public List<MoveLogEntry> getEntries() {
-    return new ArrayList<MoveLogEntry>(entries);
+    return new ArrayList<>(entries);
   }
 
   public static class MoveLogEntry {
