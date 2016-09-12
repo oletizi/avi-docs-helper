@@ -6,8 +6,6 @@ import org.codehaus.plexus.util.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,11 +18,13 @@ public class Mover {
 
   //private static final Logger logger = LoggerFactory.getLogger(Mover.class);
   private final MoveLog log;
+  private RedirectHandler redirectHandler;
   private File docroot;
 
-  public Mover(File docroot) throws IOException {
+  public Mover(File docroot, RedirectHandler redirectHandler) throws IOException {
     this.docroot = docroot;
     log = new MoveLog(new File(docroot, ".move.log"));
+    this.redirectHandler = redirectHandler;
   }
 
   public File move(String source, String dest) throws IOException {
@@ -55,6 +55,7 @@ public class Mover {
     }
 
     updateLinksTo(sourceFile, destFile);
+    redirectHandler.notifyRedirect(sourceFile, destFile);
     getMoveLog().logMove(source, dest);
     return movedTo;
   }
@@ -121,7 +122,7 @@ public class Mover {
       final String src = args[0];
       final String dest = args[1];
       final File docroot = new File(System.getProperty("docroot"));
-      new Mover(docroot).move(src, dest);
+      new Mover(docroot, new ApacheRedirectHandler(docroot)).move(src, dest);
     }
   }
 

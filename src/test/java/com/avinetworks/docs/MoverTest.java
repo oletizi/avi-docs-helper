@@ -1,6 +1,5 @@
 package com.avinetworks.docs;
 
-import net.didion.jwnl.data.Exc;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -22,6 +21,10 @@ import java.net.URL;
 import java.util.Iterator;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class MoverTest {
 
@@ -32,6 +35,7 @@ public class MoverTest {
   private File docroot;
   private Mover mover;
   private File sourceroot;
+  private RedirectHandler redirectHandler;
 
   @Before
   public void before() throws Exception {
@@ -55,7 +59,8 @@ public class MoverTest {
     }
 
     assertLinkIntegrity();
-    mover = new Mover(docroot);
+    redirectHandler = mock(RedirectHandler.class);
+    mover = new Mover(docroot, redirectHandler);
   }
 
   @After
@@ -97,7 +102,7 @@ public class MoverTest {
     assertEquals(dest, entry.getDest());
 
     // make sure the move log spans Mover instantiations
-    mover = new Mover(docroot);
+    mover = new Mover(docroot, redirectHandler);
     moveLog = mover.getMoveLog();
     assertEquals(1, moveLog.getEntries().size());
 
@@ -190,6 +195,22 @@ public class MoverTest {
     }
   }
 
+  @Test
+  public void testAddRedirect() throws Exception {
+    final String fromName = "health-monitor-troubleshooting";
+    final String toName = "moved";
+    final File fromFile = new File(docroot, fromName);
+    final File toFile = new File(docroot, toName);
+    mover.move(fromName, toName);
+
+    verify(redirectHandler, times(1)).notifyRedirect(fromFile, toFile);
+  }
+
+  @Test
+  public void testNotAddRedirect() throws Exception {
+    mover.move("lasdjf;", "l;dkajf;");
+    verify(redirectHandler, times(0)).notifyRedirect(any(), any());
+  }
 
   private void assertLinkIntegrity() throws Exception {
     final Iterator<File> markdownFiles = FileUtils.iterateFiles(docroot, new IOFileFilter() {
