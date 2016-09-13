@@ -1,4 +1,4 @@
-package com.avinetworks.docs;
+package com.avinetworks.docs.crawler;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
@@ -11,7 +11,6 @@ import edu.uci.ics.crawler4j.url.WebURL;
 import com.pnikosis.html2markdown.HTML2Md;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;

@@ -1,8 +1,10 @@
-package com.avinetworks.docs;
+package com.avinetworks.docs.structure;
 
+import com.avinetworks.docs.structure.apache.ApacheRedirectHandler;
+import com.avinetworks.docs.structure.apache.ApacheRedirectFactoryAndParser;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.codehaus.plexus.util.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -12,7 +14,7 @@ import java.io.IOException;
 import java.util.Iterator;
 
 /**
- * Moves a page from one location to another while preserving link integrity
+ * Moves a page from one location to another while preserving link integrity & creating redirects
  */
 public class Mover {
 
@@ -21,13 +23,13 @@ public class Mover {
   private RedirectHandler redirectHandler;
   private File docroot;
 
-  public Mover(File docroot, RedirectHandler redirectHandler) throws IOException {
+  Mover(File docroot, RedirectHandler redirectHandler) throws IOException {
     this.docroot = docroot;
     log = new MoveLog(new File(docroot, ".move.log"));
     this.redirectHandler = redirectHandler;
   }
 
-  public File move(String source, String dest) throws IOException {
+  File move(String source, String dest) throws IOException {
     final File sourceFile = new File(docroot, source);
     if (! sourceFile.exists()) {
       System.out.println("Source does not exist: " + sourceFile);
@@ -42,15 +44,15 @@ public class Mover {
     }
     if (dest.endsWith("/") || destFile.isDirectory()) {
       // we're moving the source into the directory dest
-      FileUtils.forceMkdir(destFile);
+      org.codehaus.plexus.util.FileUtils.forceMkdir(destFile);
       File destDir = new File(destFile, source);
       movedTo = destDir;
-      FileUtils.forceMkdir(destDir);
-      FileUtils.copyDirectoryStructure(sourceFile, destDir);
-      FileUtils.forceDelete(sourceFile);
+      org.codehaus.plexus.util.FileUtils.forceMkdir(destDir);
+      org.codehaus.plexus.util.FileUtils.copyDirectoryStructure(sourceFile, destDir);
+      org.codehaus.plexus.util.FileUtils.forceDelete(sourceFile);
     } else {
       // we're renaming the source to dest
-      FileUtils.rename(sourceFile, destFile);
+      org.codehaus.plexus.util.FileUtils.rename(sourceFile, destFile);
       movedTo = destFile;
     }
 
@@ -61,7 +63,7 @@ public class Mover {
   }
 
   private void updateLinksTo(final File sourceFile, final File destFile) throws IOException {
-    final Iterator<File> markdownFiles = org.apache.commons.io.FileUtils.iterateFiles(docroot, new IOFileFilter() {
+    final Iterator<File> filesWithLinks = FileUtils.iterateFiles(docroot, new IOFileFilter() {
       @Override
       public boolean accept(File file) {
         return accept(null, file.getName());
@@ -69,13 +71,13 @@ public class Mover {
 
       @Override
       public boolean accept(File dir, String name) {
-        return name.endsWith(".md");
+        return name.endsWith(".md") || name.endsWith(".html");
       }
     }, TrueFileFilter.INSTANCE);
 
-    while (markdownFiles.hasNext()) {
-      final File md = markdownFiles.next();
-      final Document doc = Jsoup.parse(md, "UTF-8");
+    while (filesWithLinks.hasNext()) {
+      final File htmlFile = filesWithLinks.next();
+      final Document doc = Jsoup.parse(htmlFile, "UTF-8");
       boolean modified = false;
       for (final Element anchor : doc.select("a")) {
         if (anchor.hasAttr("href")) {
@@ -93,9 +95,9 @@ public class Mover {
             }
           } else {
             // this is a relative link
-            final File target = new File(md.getParentFile(), link);
+            final File target = new File(htmlFile.getParentFile(), link);
             if (sourceFile.getAbsolutePath().equals(target.getAbsolutePath())) {
-              newLink = destFile.getAbsolutePath().replace(md.getParentFile().getAbsolutePath(), "");
+              newLink = destFile.getAbsolutePath().replace(htmlFile.getParentFile().getAbsolutePath(), "");
             }
           }
           if (newLink != null) {
@@ -105,12 +107,13 @@ public class Mover {
         }
       }
       if (modified) {
-        FileUtils.fileWrite(md.getAbsolutePath(), doc.outerHtml());
+        // XXX: TODO: This creates junk html in the markdown
+        org.codehaus.plexus.util.FileUtils.fileWrite(htmlFile.getAbsolutePath(), doc.outerHtml());
       }
     }
   }
 
-  public MoveLog getMoveLog() {
+  MoveLog getMoveLog() {
     return log;
   }
 
@@ -122,7 +125,8 @@ public class Mover {
       final String src = args[0];
       final String dest = args[1];
       final File docroot = new File(System.getProperty("docroot"));
-      new Mover(docroot, new ApacheRedirectHandler(docroot)).move(src, dest);
+      final ApacheRedirectFactoryAndParser factoryAndParser = new ApacheRedirectFactoryAndParser();
+      new Mover(docroot, new ApacheRedirectHandler(docroot, factoryAndParser, factoryAndParser)).move(src, dest);
     }
   }
 

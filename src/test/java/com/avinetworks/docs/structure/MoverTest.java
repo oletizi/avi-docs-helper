@@ -1,4 +1,4 @@
-package com.avinetworks.docs;
+package com.avinetworks.docs.structure;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;

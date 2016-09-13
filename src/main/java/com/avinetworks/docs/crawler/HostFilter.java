@@ -1,4 +1,4 @@
-package com.avinetworks.docs;
+package com.avinetworks.docs.crawler;
 
 import edu.uci.ics.crawler4j.url.WebURL;
 

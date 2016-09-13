@@ -1,4 +1,4 @@
-package com.avinetworks.docs;
+package com.avinetworks.docs.structure;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -9,12 +9,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MoveLog {
+/**
+ * Created by orion on 9/13/16.
+ */
+class MoveLog {
   private final File file;
   private final List<MoveLogEntry> entries;
   private final ObjectMapper mapper;
 
-  public MoveLog(final File file) throws IOException {
+  MoveLog(final File file) throws IOException {
     this.file = file;
     mapper = new ObjectMapper();
     if (file.exists()) {
@@ -25,16 +28,16 @@ public class MoveLog {
     }
   }
 
-  public void logMove(final String src, final String dest) throws IOException {
+  void logMove(final String src, final String dest) throws IOException {
     entries.add(new MoveLogEntry(src, dest, new DateTime()));
     mapper.writerWithDefaultPrettyPrinter().writeValue(file, entries);
   }
 
-  public List<MoveLogEntry> getEntries() {
+  List<MoveLogEntry> getEntries() {
     return new ArrayList<>(entries);
   }
 
-  public static class MoveLogEntry {
+  static class MoveLogEntry {
     @JsonProperty
     private final String src;
     @JsonProperty
