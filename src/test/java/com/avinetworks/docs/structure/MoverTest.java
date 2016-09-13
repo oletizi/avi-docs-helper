@@ -1,5 +1,6 @@
 package com.avinetworks.docs.structure;
 
+import com.avinetworks.docs.MarkdownCleaner;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
@@ -83,6 +84,15 @@ public class MoverTest {
 
     Mover.main(args);
 
+    assertFalse(srcFile.exists());
+    assertTrue(destFile.exists());
+
+    // test replay
+    FileUtils.moveDirectory(destFile, srcFile);
+    assertTrue(srcFile.exists());
+    assertFalse(destFile.exists());
+
+    Mover.main(new String[]{ "replay" });
     assertFalse(srcFile.exists());
     assertTrue(destFile.exists());
   }
@@ -213,9 +223,38 @@ public class MoverTest {
     verify(redirectHandler, times(0)).notifyRedirect(any(), any());
   }
 
+  @Test
+  public void testReplay() throws Exception {
+    String moved1Text = FileUtils.readFileToString(new File(docroot, "health-monitor-troubleshooting/index.md"), "UTF-8");
+    mover.move("health-monitor-troubleshooting", "moved1");
+    mover.move("overview-of-health-monitors", "moved2");
+    File moved1 = new File(docroot, "moved1");
+    File moved2 = new File(docroot, "moved2");
+    assertTrue(moved1.isDirectory());
+    assertTrue(moved2.isDirectory());
+    FileUtils.moveDirectory(moved1, new File(docroot, "health-monitor-troubleshooting"));
+    FileUtils.moveDirectory(moved2, new File(docroot, "overview-of-health-monitors"));
+    assertFalse(moved1.isDirectory());
+    assertFalse(moved2.isDirectory());
+    mover.replay();
+    assertTrue(moved1.isDirectory());
+    assertTrue(moved2.isDirectory());
+  }
+
+//  @Test
+//  public void testFileIntegrityAfterLinkUpdate() throws Exception {
+//    String moved1Text = new MarkdownCleaner().clean(FileUtils.readFileToString(new File(docroot, "health-monitor-troubleshooting/index.md"), "UTF-8"));
+//    mover.move("health-monitor-troubleshooting", "moved1");
+//    assertTrue(new File(docroot, "moved1").isDirectory());
+//    assertEquals(moved1Text, new MarkdownCleaner().clean(FileUtils.readFileToString(new File(docroot, "moved1/index.md"), "UTF-8")));
+//
+//    mover.move("overview-of-health-monitors", "moved2");
+//    assertEquals(moved1Text, FileUtils.readFileToString(new File(docroot, "moved1/index.md"), "UTF-8"));
+//  }
+
   private void assertFileIntegrity() throws Exception {
-    Iterator<File> filesWithLinks = getFileIterator(new String[] {".md"});
-    while(filesWithLinks.hasNext()) {
+    Iterator<File> filesWithLinks = getFileIterator(new String[]{".md"});
+    while (filesWithLinks.hasNext()) {
       final File file = filesWithLinks.next();
       final String text = FileUtils.readFileToString(file, "UTF-8");
       System.out.println("TEXT:\n" + text);

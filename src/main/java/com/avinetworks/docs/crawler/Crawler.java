@@ -1,5 +1,6 @@
 package com.avinetworks.docs.crawler;
 
+import com.avinetworks.docs.MarkdownCleaner;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.crawler.Page;
@@ -14,6 +15,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.safety.Whitelist;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,11 +85,7 @@ public class Crawler extends WebCrawler {
         // Put referenced images in a directory local to the page
         snarfImages(article, outDir);
 
-        // TODO:
-        // - Make a "move" script that moves pages while preserving link integrity
-        // - Generalize avi-docs-snarfer to be a tools project
-
-        final String markdown = HTML2Md.convert(article.outerHtml(), "/");
+        final String markdown = new MarkdownCleaner().clean(HTML2Md.convert(article.outerHtml(), "/"));
         final File outfile = new File(outDir, "index.md");
         info("  Writing content to file: " + outfile);
         final PrintWriter out = new PrintWriter(new FileWriter(outfile));
@@ -173,7 +171,7 @@ public class Crawler extends WebCrawler {
     final String seedURL;
     final Filter filter;
     if (DEBUG) {
-      seedURL = "https://" + HOSTNAME + "/docs/cli-guide/";
+      seedURL = "https://" + HOSTNAME + "/health-monitor-troubleshooting/";
       filter = url -> seedURL.equals(url.getURL());
     } else {
       seedURL = "https://" + HOSTNAME + "/";

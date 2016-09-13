@@ -1,5 +1,6 @@
 package com.avinetworks.docs.structure;
 
+import com.avinetworks.docs.MarkdownCleaner;
 import com.avinetworks.docs.structure.apache.ApacheRedirectHandler;
 import com.avinetworks.docs.structure.apache.ApacheRedirectFactoryAndParser;
 import org.apache.commons.io.FileUtils;
@@ -31,7 +32,7 @@ public class Mover {
 
   File move(String source, String dest) throws IOException {
     final File sourceFile = new File(docroot, source);
-    if (! sourceFile.exists()) {
+    if (!sourceFile.exists()) {
       System.out.println("Source does not exist: " + sourceFile);
       return null;
     }
@@ -108,8 +109,17 @@ public class Mover {
       }
       if (modified) {
         doc.outputSettings().prettyPrint(false);
-        org.codehaus.plexus.util.FileUtils.fileWrite(htmlFile.getAbsolutePath(), doc.select("body").html());
+        String updated = doc.select("body").html();
+        updated = new MarkdownCleaner().clean(updated);
+        org.codehaus.plexus.util.FileUtils.fileWrite(htmlFile.getAbsolutePath(), updated);
       }
+    }
+  }
+
+
+  void replay() throws IOException {
+    for (MoveLog.MoveLogEntry entry : getMoveLog().getEntries()) {
+      move(entry.getSrc(), entry.getDest());
     }
   }
 
@@ -118,15 +128,18 @@ public class Mover {
   }
 
   public static void main(final String[] args) throws Exception {
-    if (args.length < 2) {
+    final File docroot = new File(System.getProperty("docroot"));
+    final ApacheRedirectFactoryAndParser factoryAndParser = new ApacheRedirectFactoryAndParser();
+    final Mover mover = new Mover(docroot, new ApacheRedirectHandler(docroot, factoryAndParser, factoryAndParser));
+    if (args.length == 1 && args[0].equals("replay")) {
+      mover.replay();
+    } else if (args.length < 2) {
       System.out.print(usage());
     } else {
       // create a new Mover and perform the move
       final String src = args[0];
       final String dest = args[1];
-      final File docroot = new File(System.getProperty("docroot"));
-      final ApacheRedirectFactoryAndParser factoryAndParser = new ApacheRedirectFactoryAndParser();
-      new Mover(docroot, new ApacheRedirectHandler(docroot, factoryAndParser, factoryAndParser)).move(src, dest);
+      mover.move(src, dest);
     }
   }
 

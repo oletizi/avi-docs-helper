@@ -18,6 +18,7 @@ public class HostFilter implements Filter {
         && !href.contains(hostname + "/author/")
         && !href.contains(hostname + "/category/")
         && !href.contains(hostname + "/page/")
+        && !href.contains(hostname + "/wp-login")
         && !href.endsWith(".png")
         && !href.endsWith(".gif")
         && !href.endsWith(".jpg")
