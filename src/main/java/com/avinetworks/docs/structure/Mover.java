@@ -107,8 +107,8 @@ public class Mover {
         }
       }
       if (modified) {
-        // XXX: TODO: This creates junk html in the markdown
-        org.codehaus.plexus.util.FileUtils.fileWrite(htmlFile.getAbsolutePath(), doc.outerHtml());
+        doc.outputSettings().prettyPrint(false);
+        org.codehaus.plexus.util.FileUtils.fileWrite(htmlFile.getAbsolutePath(), doc.select("body").html());
       }
     }
   }

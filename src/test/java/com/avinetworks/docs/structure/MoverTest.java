@@ -66,6 +66,7 @@ public class MoverTest {
   @After
   public void after() throws Exception {
     assertLinkIntegrity();
+    assertFileIntegrity();
   }
 
   @Test
@@ -212,22 +213,23 @@ public class MoverTest {
     verify(redirectHandler, times(0)).notifyRedirect(any(), any());
   }
 
+  private void assertFileIntegrity() throws Exception {
+    Iterator<File> filesWithLinks = getFileIterator(new String[] {".md"});
+    while(filesWithLinks.hasNext()) {
+      final File file = filesWithLinks.next();
+      final String text = FileUtils.readFileToString(file, "UTF-8");
+      System.out.println("TEXT:\n" + text);
+      assertFalse("Markdown file contains html tag: " + file + "\n" + text, text.contains("<html>"));
+      assertFalse("Markdown file contains body tag: " + file + "\n" + text, text.contains("<body>"));
+    }
+  }
+
   private void assertLinkIntegrity() throws Exception {
-    final Iterator<File> markdownFiles = FileUtils.iterateFiles(docroot, new IOFileFilter() {
-      @Override
-      public boolean accept(File file) {
-        return accept(null, file.getName());
-      }
+    final Iterator<File> filesWithLinks = getFileIterator(new String[]{".md", ".html"});
 
-      @Override
-      public boolean accept(File dir, String name) {
-        return name.endsWith(".md");
-      }
-    }, TrueFileFilter.INSTANCE);
-
-    while (markdownFiles.hasNext()) {
-      final File md = markdownFiles.next();
-      Document doc = Jsoup.parse(md, "UTF-8");
+    while (filesWithLinks.hasNext()) {
+      final File file = filesWithLinks.next();
+      Document doc = Jsoup.parse(file, "UTF-8");
       Elements anchors = doc.select("a");
       for (Element anchor : anchors) {
         if (anchor.hasAttr("href")) {
@@ -239,12 +241,12 @@ public class MoverTest {
           } else if (link.startsWith("/")) {
             // this is an absolute link
             final File target = new File(docroot, link);
-            assertTrue("Target for link doesn't exist!\n  link   : " + link + "\n  target : " + target + "\n  in file: " + md, target.exists());
+            assertTrue("Target for link doesn't exist!\n  link   : " + link + "\n  target : " + target + "\n  in file: " + file, target.exists());
           } else {
             // this is a relative link
-            final File target = new File(md.getParentFile(), link);
+            final File target = new File(file.getParentFile(), link);
             try {
-              assertTrue("Target for link (" + link + ") doesn't exist!\n  target : " + target + "\n  in file: " + md, target.exists());
+              assertTrue("Target for link (" + link + ") doesn't exist!\n  target : " + target + "\n  in file: " + file, target.exists());
             } catch (AssertionError e) {
               final StringBuilder msg = new StringBuilder(e.getMessage()).append("\n");
               final File targetParent = target.getParentFile();
@@ -266,6 +268,25 @@ public class MoverTest {
         }
       }
     }
+  }
+
+  private Iterator<File> getFileIterator(String[] extensions) {
+    return FileUtils.iterateFiles(docroot, new IOFileFilter() {
+      @Override
+      public boolean accept(File file) {
+        return accept(null, file.getName());
+      }
+
+      @Override
+      public boolean accept(File dir, String name) {
+        for (String extension : extensions) {
+          if (name.endsWith(extension)) {
+            return true;
+          }
+        }
+        return false;
+      }
+    }, TrueFileFilter.INSTANCE);
   }
 
   private void assertFileInDirectory(final File dir, final String filename) {
