@@ -43,12 +43,13 @@ public class Mover {
           + sourceFile + "\n  dest  : " + destFile);
       return null;
     }
-    if (dest.endsWith("/") || destFile.isDirectory()) {
+    if (destFile.isDirectory()) {
       // we're moving the source into the directory dest
-      org.codehaus.plexus.util.FileUtils.forceMkdir(destFile);
       File destDir = new File(destFile, source);
       movedTo = destDir;
-      org.codehaus.plexus.util.FileUtils.forceMkdir(destDir);
+      //org.codehaus.plexus.util.FileUtils.forceMkdir(destDir);
+      System.out.println("Moving:\n");
+      System.out.println("  " + sourceFile);
       org.codehaus.plexus.util.FileUtils.copyDirectoryStructure(sourceFile, destDir);
       org.codehaus.plexus.util.FileUtils.forceDelete(sourceFile);
     } else {

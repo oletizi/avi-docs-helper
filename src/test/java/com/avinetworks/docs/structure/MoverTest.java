@@ -86,6 +86,19 @@ public class MoverTest {
 
     assertFalse(srcFile.exists());
     assertTrue(destFile.exists());
+    assertTrue(destFile.isDirectory());
+    System.out.println("DestFile: " + destFile);
+    assertFileInDirectory(destFile, "index.md");
+
+    File subdir = new File(docroot, "subdir");
+    FileUtils.forceMkdir(subdir);
+    printFilesInDirectory(docroot);
+    Mover.main(new String[] {destFile.getName(), "subdir"});
+    assertFileInDirectory(new File(subdir, destFile.getName()), "index.md");
+    printFilesInDirectory(new File(subdir, destFile.getName()));
+
+    Mover.main(new String[] { "subdir/moved", "moved/"});
+
 
     // test replay
     FileUtils.moveDirectory(destFile, srcFile);
@@ -95,6 +108,16 @@ public class MoverTest {
     Mover.main(new String[]{ "replay" });
     assertFalse(srcFile.exists());
     assertTrue(destFile.exists());
+
+    Mover.main(new String[] { "replay"});
+  }
+
+  private void printFilesInDirectory(File dir) throws Exception {
+    System.out.println("Files in " + dir);
+    for (String name : dir.list()) {
+      System.out.println(name);
+    }
+
   }
 
   @Test
@@ -147,8 +170,9 @@ public class MoverTest {
     mover.move(source, dest);
     assertFalse(sourceDir.exists());
     assertTrue(destDir.exists());
+    printFilesInDirectory(destDir);
+    assertFileInDirectory(destDir, "index.md");
 
-    assertFileInDirectory(destDir, source);
   }
 
   @Test
@@ -257,7 +281,6 @@ public class MoverTest {
     while (filesWithLinks.hasNext()) {
       final File file = filesWithLinks.next();
       final String text = FileUtils.readFileToString(file, "UTF-8");
-      System.out.println("TEXT:\n" + text);
       assertFalse("Markdown file contains html tag: " + file + "\n" + text, text.contains("<html>"));
       assertFalse("Markdown file contains body tag: " + file + "\n" + text, text.contains("<body>"));
     }
