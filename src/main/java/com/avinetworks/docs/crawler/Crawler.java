@@ -27,7 +27,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 
 public class Crawler extends WebCrawler {
-  private static final String HOSTNAME = "kbdev.avinetworks.com";
+  private static final String HOSTNAME = "kbstage.avinetworks.com";
   private static final Logger logger = LoggerFactory.getLogger(Crawler.class);
   private final File outputDir;
   private Filter filter;
@@ -76,8 +76,7 @@ public class Crawler extends WebCrawler {
         article.select("small").remove();
 
         // Clean up anchors and images
-        article.select("a, img").removeAttr("class").removeAttr("id");
-        article.select("a").removeAttr("target");
+        article.select("a").removeAttr("class").removeAttr("id").removeAttr("target");
 
         // Unwind the crayon gunk
         unwindCrayon(article);
@@ -151,7 +150,7 @@ public class Crawler extends WebCrawler {
   }
 
 
-  private static final boolean DEBUG = false;
+  private static final boolean DEBUG = true;
 
   public static void main(String[] args) throws Exception {
     String crawlStorageFolder = "/tmp/crawler/";
@@ -171,7 +170,7 @@ public class Crawler extends WebCrawler {
     final String seedURL;
     final Filter filter;
     if (DEBUG) {
-      seedURL = "https://" + HOSTNAME + "/health-monitor-troubleshooting/";
+      seedURL = "https://" + HOSTNAME + "/api-guide/";
       filter = url -> seedURL.equals(url.getURL());
     } else {
       seedURL = "https://" + HOSTNAME + "/";

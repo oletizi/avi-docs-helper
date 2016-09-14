@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * Convert Html to MarkDown
@@ -187,6 +188,8 @@ public class HTML2Md {
     String tagName = tag.getName();
     if (tagName.equals("div")) {
       div(element, lines);
+    } else if (tagName.equals("blockquote")) {
+      blockquote(element, lines);
     } else if (tagName.equals("p")) {
       p(element, lines);
     } else if (tagName.equals("br")) {
@@ -219,6 +222,17 @@ public class HTML2Md {
       MDLine line = getLastLine(lines);
       line.append(getTextContent(element));
     }
+  }
+
+  private static void blockquote(Element element, ArrayList<MDLine> lines) {
+    String text = element.html();
+    text = text.replaceAll("<p>", "");
+    text = text.replaceAll("</p>", "");
+    text = text.replaceAll("<br>", "\n");
+    text = Pattern.compile("^(.*)", Pattern.MULTILINE).matcher(text).replaceAll("> $1");
+    System.out.println("TEXT:\n" + text);
+    //passthrough(element, lines);
+    getLastLine(lines).append(text);
   }
 
   private static void pre(Element element, ArrayList<MDLine> lines) {
@@ -340,22 +354,9 @@ public class HTML2Md {
 
   private static void img(Element element, ArrayList<MDLine> lines) {
     MDLine line = getLastLine(lines);
+    System.out.println("IMG: " + element.outerHtml());
     line.append(element.outerHtml());
-//
-//    line.append("![");
-//    String alt = element.attr("alt");
-//    line.append(alt);
-//    line.append("]");
-//    line.append("(");
-//    String url = element.attr("src");
-//    line.append(url);
-//    String title = element.attr("title");
-//    if (!title.equals("")) {
-//      line.append(" \"");
-//      line.append(title);
-//      line.append("\"");
-//    }
-//    line.append(")");
+
   }
 
   private static void code(Element element, ArrayList<MDLine> lines) {
