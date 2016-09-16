@@ -139,7 +139,7 @@ public class HTML2Md {
   }
 
   private static String getTextContent(Element element) {
-    ArrayList<MDLine> lines = new ArrayList<MDLine>();
+    ArrayList<MDLine> lines = new ArrayList<>();
 
     List<Node> children = element.childNodes();
     for (Node child : children) {
@@ -165,7 +165,7 @@ public class HTML2Md {
     int blankLines = 0;
     StringBuilder result = new StringBuilder();
     for (int i = 0; i < lines.size(); i++) {
-      String line = lines.get(i).toString().trim();
+      String line = lines.get(i).toString();//.trim();
       if (line.equals("")) {
         blankLines++;
       } else {
@@ -230,7 +230,6 @@ public class HTML2Md {
     text = text.replaceAll("</p>", "");
     text = text.replaceAll("<br>", "\n");
     text = Pattern.compile("^(.*)", Pattern.MULTILINE).matcher(text).replaceAll("> $1");
-    System.out.println("TEXT:\n" + text);
     //passthrough(element, lines);
     getLastLine(lines).append(text);
   }
@@ -354,7 +353,6 @@ public class HTML2Md {
 
   private static void img(Element element, ArrayList<MDLine> lines) {
     MDLine line = getLastLine(lines);
-    System.out.println("IMG: " + element.outerHtml());
     line.append(element.outerHtml());
 
   }

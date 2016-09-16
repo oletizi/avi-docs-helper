@@ -84,7 +84,9 @@ public class Crawler extends WebCrawler {
         // Put referenced images in a directory local to the page
         snarfImages(article, outDir);
 
-        final String markdown = new MarkdownCleaner().clean(HTML2Md.convert(article.outerHtml(), "/"));
+        String markdown = HTML2Md.convert(article.outerHtml(), "/");
+
+        markdown = new MarkdownCleaner().clean(markdown);
         final File outfile = new File(outDir, "index.md");
         info("  Writing content to file: " + outfile);
         final PrintWriter out = new PrintWriter(new FileWriter(outfile));
@@ -170,7 +172,7 @@ public class Crawler extends WebCrawler {
     final String seedURL;
     final Filter filter;
     if (DEBUG) {
-      seedURL = "https://" + HOSTNAME + "/api-guide/";
+      seedURL = "https://" + HOSTNAME + "/autoscale-service-engines/";
       filter = url -> seedURL.equals(url.getURL());
     } else {
       seedURL = "https://" + HOSTNAME + "/";

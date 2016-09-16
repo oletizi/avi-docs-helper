@@ -1,7 +1,7 @@
 package com.pnikosis.html2markdown;
 
 public class MDLine {
-  private int level = 0;
+  private final int level;
   private MDLineType type;
   private StringBuilder content;
 
@@ -68,9 +68,9 @@ public class MDLine {
     return level;
   }
 
-  public void setLevel(int i) {
-    level = Math.max(i, 0);
-  }
+//  public void setLevel(int i) {
+//    level = Math.max(i, 0);
+//  }
 
   public String toString() {
     StringBuilder newLine = new StringBuilder();
@@ -94,6 +94,9 @@ public class MDLine {
 
     newLine.append(getContent());
 
+    if (type.equals(MDLineType.Unordered) && level > 0) {
+      System.out.println("Returning: " + newLine.toString());
+    }
     return newLine.toString();
   }
 
