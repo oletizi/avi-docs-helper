@@ -67,7 +67,7 @@ public class Crawler extends WebCrawler {
         // Extract title
         Elements titleElement = doc.select("h1.faq-title");
         // chuck the title, now that we know what it is
-        final String title = titleElement.text().replaceAll(":", "&#58;");
+        final String title = titleElement.text().replaceAll(":", "&#58;").replaceAll("\\.", "&#46;");
         titleElement.remove();
 
         // Extract just the article content
@@ -172,7 +172,7 @@ public class Crawler extends WebCrawler {
     final String seedURL;
     final Filter filter;
     if (DEBUG) {
-      seedURL = "https://" + HOSTNAME + "/autoscale-service-engines/";
+      seedURL = "https://" + HOSTNAME + "/datascript-avi-http-redirect/";
       filter = url -> seedURL.equals(url.getURL());
     } else {
       seedURL = "https://" + HOSTNAME + "/";
