@@ -94,9 +94,6 @@ public class MDLine {
 
     newLine.append(getContent());
 
-    if (type.equals(MDLineType.Unordered) && level > 0) {
-      System.out.println("Returning: " + newLine.toString());
-    }
     return newLine.toString();
   }
 

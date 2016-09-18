@@ -172,7 +172,7 @@ public class Crawler extends WebCrawler {
     final String seedURL;
     final Filter filter;
     if (DEBUG) {
-      seedURL = "https://" + HOSTNAME + "/datascript-avi-http-redirect/";
+      seedURL = "https://" + HOSTNAME + "/avi-service-engine-group-options/";
       filter = url -> seedURL.equals(url.getURL());
     } else {
       seedURL = "https://" + HOSTNAME + "/";
