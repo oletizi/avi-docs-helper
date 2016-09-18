@@ -336,7 +336,7 @@ public class HTML2Md {
   }
 
   private static void ul(Element element, ArrayList<MDLine> lines) {
-    lines.add(new MDLine(MDLineType.None, 0, ""));
+    //lines.add(new MDLine(MDLineType.None, 0, ""));
     indentation++;
     System.out.println("Incremented indentation: " + indentation);
     orderedList = false;
@@ -346,18 +346,18 @@ public class HTML2Md {
 
     indentation--;
     System.out.println("Decremented indentation: " + indentation);
-    lines.add(new MDLine(MDLineType.None, 0, ""));
+    //lines.add(new MDLine(MDLineType.None, 0, ""));
   }
 
   private static void ol(Element element, ArrayList<MDLine> lines) {
-    lines.add(new MDLine(MDLineType.None, 0, ""));
+    //lines.add(new MDLine(MDLineType.None, 0, ""));
     indentation++;
     orderedList = true;
     for (Element child : element.children()) {
       processElement(child, lines);
     }
     indentation--;
-    lines.add(new MDLine(MDLineType.None, 0, ""));
+    //lines.add(new MDLine(MDLineType.None, 0, ""));
   }
 
   private static void li(Element element, ArrayList<MDLine> lines) {
