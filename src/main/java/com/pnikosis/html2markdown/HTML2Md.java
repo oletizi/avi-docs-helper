@@ -7,6 +7,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.parser.Tag;
+import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +21,7 @@ import java.util.regex.Pattern;
  */
 public class HTML2Md {
   private static int indentation = -1;
+  private static int listDepth = 0;
   private static boolean orderedList = false;
 
   public static String convert(String theHTML, String baseURL) {
@@ -70,8 +72,6 @@ public class HTML2Md {
         String mmName = (hmPath + newName.replace("html", "md")).replaceAll("\\s*", "");
         FilesUtil.newFile(mmName, head + parsedText, charset);
       }
-    } catch (MalformedURLException e) {
-      e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -152,7 +152,6 @@ public class HTML2Md {
     StringBuilder result = new StringBuilder();
     for (int i = 0; i < lines.size(); i++) {
       String line = lines.get(i).toString();//.trim();
-      System.out.println("LINE: " + line);
       if (line.trim().equals("")) {
         blankLines++;
       } else {
@@ -222,6 +221,7 @@ public class HTML2Md {
 
   private static void pre(Element element, ArrayList<MDLine> lines) {
     element.removeAttr("crayon");
+    lines.add(new MDLine(MDLineType.None, listDepth, ""));
     passthrough(element, lines);
   }
 
@@ -250,9 +250,9 @@ public class HTML2Md {
     String content = getTextContent(element);
     if (!content.equals("")) {
       if (!line.getContent().trim().equals("")) {
-        lines.add(new MDLine(MDLineType.None, 0, ""));
-        lines.add(new MDLine(MDLineType.None, 0, content));
-        lines.add(new MDLine(MDLineType.None, 0, ""));
+        lines.add(new MDLine(MDLineType.None, indentation, ""));
+        lines.add(new MDLine(MDLineType.None, indentation, content));
+        lines.add(new MDLine(MDLineType.None, indentation, ""));
       } else {
         if (!content.trim().equals(""))
           line.append(content);
@@ -263,12 +263,15 @@ public class HTML2Md {
   private static void p(Element element, ArrayList<MDLine> lines) {
     MDLine line = getLastLine(lines);
     if (!line.getContent().trim().equals(""))
-      lines.add(new MDLine(MDLineType.None, 0, ""));
-    lines.add(new MDLine(MDLineType.None, 0, ""));
-    lines.add(new MDLine(MDLineType.None, 0, getTextContent(element)));
-    lines.add(new MDLine(MDLineType.None, 0, ""));
-    if (!line.getContent().trim().equals(""))
-      lines.add(new MDLine(MDLineType.None, 0, ""));
+      lines.add(new MDLine(MDLineType.None, listDepth, ""));
+    lines.add(new MDLine(MDLineType.None, listDepth, ""));
+
+    String textContent = getTextContent(element);
+    lines.add(new MDLine(MDLineType.None, listDepth, textContent));
+    lines.add(new MDLine(MDLineType.None, listDepth, ""));
+    if (!line.getContent().trim().equals("")) {
+      lines.add(new MDLine(MDLineType.None, listDepth, ""));
+    }
   }
 
   private static void br(ArrayList<MDLine> lines) {
@@ -336,28 +339,25 @@ public class HTML2Md {
   }
 
   private static void ul(Element element, ArrayList<MDLine> lines) {
-    //lines.add(new MDLine(MDLineType.None, 0, ""));
     indentation++;
-    System.out.println("Incremented indentation: " + indentation);
+    listDepth++;
     orderedList = false;
     for (Element child : element.children()) {
       processElement(child, lines);
     }
-
+    listDepth--;
     indentation--;
-    System.out.println("Decremented indentation: " + indentation);
-    //lines.add(new MDLine(MDLineType.None, 0, ""));
   }
 
   private static void ol(Element element, ArrayList<MDLine> lines) {
-    //lines.add(new MDLine(MDLineType.None, 0, ""));
     indentation++;
+    listDepth++;
     orderedList = true;
     for (Element child : element.children()) {
       processElement(child, lines);
     }
+    listDepth--;
     indentation--;
-    //lines.add(new MDLine(MDLineType.None, 0, ""));
   }
 
   private static void li(Element element, ArrayList<MDLine> lines) {

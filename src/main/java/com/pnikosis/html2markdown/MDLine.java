@@ -74,8 +74,10 @@ public class MDLine {
 
   public String toString() {
     StringBuilder newLine = new StringBuilder();
-    for (int j = 0; j < getLevel(); j++) {
-      newLine.append("    ");
+    if (getLevel() >= 0) {
+      for (int j = 0; j < getLevel(); j++) {
+        newLine.append("    ");
+      }
     }
 
     if (type.equals(MDLineType.Ordered)) {

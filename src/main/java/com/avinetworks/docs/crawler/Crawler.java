@@ -80,6 +80,7 @@ public class Crawler extends WebCrawler {
 
         // Unwind the crayon gunk
         unwindCrayon(article);
+        fixCLI(article);
 
         // Put referenced images in a directory local to the page
         snarfImages(article, outDir);
@@ -104,6 +105,26 @@ public class Crawler extends WebCrawler {
       throw new RuntimeException(e);
     }
 
+  }
+
+  private void fixCLI(Elements article) {
+//    Elements cli = article.select(".command-line");
+//    if (cli != null) {
+//      if (cli.)
+//    }
+//    if (element.attr("class").contains("command-line")) {
+//      Elements code = element.select("pre > code");
+//      if (code != null) {
+//        Elements prompt = code.select(".command-line-prompt");
+//        if (prompt != null) {
+//          prompt.remove();
+//        }
+//        Elements span = code.select("span");
+//        System.out.println("CODE SPAN text: " + span.text());
+//        code.html(span.text());
+//        System.out.println("code: " + code);
+//      }
+//    }
   }
 
   private void unwindCrayon(Elements article) {
@@ -172,7 +193,7 @@ public class Crawler extends WebCrawler {
     final String seedURL;
     final Filter filter;
     if (DEBUG) {
-      seedURL = "https://" + HOSTNAME + "/avi-vantage-16-1-1-release-notes/";
+      seedURL = "https://" + HOSTNAME + "/backup-and-restore-of-avi-vantage-configuration/";
       filter = url -> seedURL.equals(url.getURL());
     } else {
       seedURL = "https://" + HOSTNAME + "/";
