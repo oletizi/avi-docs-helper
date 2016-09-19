@@ -27,7 +27,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 
 public class Crawler extends WebCrawler {
-  private static final String HOSTNAME = "kbdev.avinetworks.com";
+  private static final String HOSTNAME = "kbstage.avinetworks.com";
   private static final Logger logger = LoggerFactory.getLogger(Crawler.class);
   private final File outputDir;
   private Filter filter;
@@ -85,8 +85,6 @@ public class Crawler extends WebCrawler {
         // Put referenced images in a directory local to the page
         snarfImages(article, outDir);
 
-        System.out.println("DOC BEFORE CONVERSION\n" + article);
-        System.out.println("-----------------------------------------------------------------");
         String markdown = HTML2Md.convert(article.outerHtml(), "/");
 
         markdown = new MarkdownCleaner().clean(markdown);
@@ -198,7 +196,7 @@ public class Crawler extends WebCrawler {
     final String seedURL;
     final Filter filter;
     if (DEBUG) {
-      seedURL = "https://" + HOSTNAME + "/bgp-support-for-virtual-services/";
+      seedURL = "https://" + HOSTNAME + "/comparing-past-and-present-se-group-ha-modes/";
       filter = url -> seedURL.equals(url.getURL());
     } else {
       seedURL = "https://" + HOSTNAME + "/";

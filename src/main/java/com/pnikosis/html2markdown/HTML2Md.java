@@ -204,10 +204,37 @@ public class HTML2Md {
       li(element, lines);
     } else if (tagName.equals("table")) {
       table(element, lines);
+    } else if (tagName.equals("figure")) {
+      figure(element, lines);
+    } else if (tagName.equals("figcaption")) {
+      figcapture(element, lines);
     } else {
       MDLine line = getLastLine(lines);
       line.append(getTextContent(element));
     }
+  }
+
+  private static void keepAndProcessChildren(Element element, ArrayList<MDLine> lines, String openTag, String closeTag) {
+    final MDLine line = new MDLine(MDLineType.None, indentation, openTag);
+    lines.add(line);
+    for (Node child : element.childNodes()) {
+      if (child instanceof TextNode) {
+        line.append(((TextNode) child).text());
+      } else if (child instanceof Element) {
+        processElement((Element) child, lines);
+      } else {
+        System.err.println("I don't know what to do with this node type: " + child);
+      }
+    }
+    lines.add(new MDLine(MDLineType.None, indentation, closeTag));
+  }
+
+  private static void figcapture(Element element, ArrayList<MDLine> lines) {
+    keepAndProcessChildren(element, lines, "<figcapture>", "</figcapture>");
+  }
+
+  private static void figure(Element element, ArrayList<MDLine> lines) {
+    keepAndProcessChildren(element, lines, "<figure>", "</figure>");
   }
 
   private static void blockquote(Element element, ArrayList<MDLine> lines) {
@@ -282,6 +309,10 @@ public class HTML2Md {
   }
 
   private static void h(Element element, ArrayList<MDLine> lines) {
+    if ("".equals(element.text().trim())) {
+      // nothing in here
+      return;
+    }
     indentation = -1;
     MDLine line = getLastLine(lines);
     if (!line.getContent().trim().equals(""))
