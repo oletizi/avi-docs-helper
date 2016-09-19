@@ -27,7 +27,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 
 public class Crawler extends WebCrawler {
-  private static final String HOSTNAME = "kbstage.avinetworks.com";
+  private static final String HOSTNAME = "kbdev.avinetworks.com";
   private static final Logger logger = LoggerFactory.getLogger(Crawler.class);
   private final File outputDir;
   private Filter filter;
@@ -85,6 +85,8 @@ public class Crawler extends WebCrawler {
         // Put referenced images in a directory local to the page
         snarfImages(article, outDir);
 
+        System.out.println("DOC BEFORE CONVERSION\n" + article);
+        System.out.println("-----------------------------------------------------------------");
         String markdown = HTML2Md.convert(article.outerHtml(), "/");
 
         markdown = new MarkdownCleaner().clean(markdown);
@@ -129,15 +131,18 @@ public class Crawler extends WebCrawler {
 
   private void unwindCrayon(Elements article) {
     final Elements crayon = article.select("div.crayon-syntax");
-    final Elements textArea = crayon.select("textarea.crayon-plain");
-    final String text = textArea.text();
-    crayon.tagName("pre");
-    crayon.removeAttr("id");
-    crayon.removeAttr("class");
-    crayon.removeAttr("style");
-    crayon.removeAttr("data-settings");
-    crayon.html("<code class=\"language-lua\">" + text + "</code>");
+    for (Element element : crayon) {
+      final Elements textArea = element.select("textarea.crayon-plain");
+      final String text = textArea.text();
+      element.tagName("pre");
+      element.removeAttr("id");
+      element.removeAttr("class");
+      element.removeAttr("style");
+      element.removeAttr("data-settings");
+      element.html("<code class=\"language-lua\">" + text + "</code>");
+    }
   }
+
 
   private void snarfImages(Elements article, File outDir) throws IOException {
     for (Element img : article.select("img")) {
@@ -193,7 +198,7 @@ public class Crawler extends WebCrawler {
     final String seedURL;
     final Filter filter;
     if (DEBUG) {
-      seedURL = "https://" + HOSTNAME + "/backup-and-restore-of-avi-vantage-configuration/";
+      seedURL = "https://" + HOSTNAME + "/bgp-support-for-virtual-services/";
       filter = url -> seedURL.equals(url.getURL());
     } else {
       seedURL = "https://" + HOSTNAME + "/";

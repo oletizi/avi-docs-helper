@@ -222,6 +222,7 @@ public class HTML2Md {
   private static void pre(Element element, ArrayList<MDLine> lines) {
     element.removeAttr("crayon");
     lines.add(new MDLine(MDLineType.None, listDepth, ""));
+    System.out.println("FOUND PRE:\n" + element);
     passthrough(element, lines);
   }
 

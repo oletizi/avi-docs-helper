@@ -1,0 +1,15 @@
+avi-vantage-16-1-2-release-notes
+    OK
+avi-vantage-16-1-3-release-notes
+avi-vantage-16-1-4-release-notes
+avi-vantage-16-1-5-release-notes
+avi-vantage-16-1-6-release-notes
+avi-vantage-16-1-7-release-notes
+avi-vantage-16-2-1-release-notes
+avi-vantage-16-2-2-release-notes
+avi-vantage-16-2-release-notes
+    OK
+avi-vantage-integration-with-rancheros
+    OK
+avi-vantage-integration-with-safenet-network-hsm-16-2-2/
+    TODO: Unmangle CLI prompts
