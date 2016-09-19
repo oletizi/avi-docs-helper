@@ -196,7 +196,7 @@ public class Crawler extends WebCrawler {
     final String seedURL;
     final Filter filter;
     if (DEBUG) {
-      seedURL = "https://" + HOSTNAME + "/comparing-past-and-present-se-group-ha-modes/";
+      seedURL = "https://" + HOSTNAME + "/connection-multiplex/";
       filter = url -> seedURL.equals(url.getURL());
     } else {
       seedURL = "https://" + HOSTNAME + "/";

@@ -204,6 +204,16 @@ public class HTML2Md {
       li(element, lines);
     } else if (tagName.equals("table")) {
       table(element, lines);
+    } else if (tagName.equals("thead")) {
+      thead(element, lines);
+    } else if (tagName.equals("tbody")) {
+      tbody(element, lines);
+    } else if (tagName.equals("tr")) {
+      tr(element, lines);
+    } else if (tagName.equals("th")) {
+      th(element, lines);
+    } else if (tagName.equals("td")) {
+      td(element, lines);
     } else if (tagName.equals("figure")) {
       figure(element, lines);
     } else if (tagName.equals("figcaption")) {
@@ -212,6 +222,26 @@ public class HTML2Md {
       MDLine line = getLastLine(lines);
       line.append(getTextContent(element));
     }
+  }
+
+  private static void th(Element element, ArrayList<MDLine> lines) {
+    keepAndProcessChildren(element, lines, "<th>", "</th>");
+  }
+
+  private static void tbody(Element element, ArrayList<MDLine> lines) {
+    keepAndProcessChildren(element, lines, "<tbody>", "</tbody>");
+  }
+
+  private static void thead(Element element, ArrayList<MDLine> lines) {
+    keepAndProcessChildren(element, lines, "<thead>", "</thead>");
+  }
+
+  private static void td(Element element, ArrayList<MDLine> lines) {
+    keepAndProcessChildren(element, lines, "<td>", "</td>");
+  }
+
+  private static void tr(Element element, ArrayList<MDLine> lines) {
+    keepAndProcessChildren(element, lines, "<tr>", "</tr>");
   }
 
   private static void keepAndProcessChildren(Element element, ArrayList<MDLine> lines, String openTag, String closeTag) {
@@ -254,7 +284,7 @@ public class HTML2Md {
   }
 
   private static void table(Element element, ArrayList<MDLine> lines) {
-    passthrough(element, lines);
+    keepAndProcessChildren(element, lines, "<table class=\".table\">", "</table>");
   }
 
   private static void passthrough(Element element, ArrayList<MDLine> lines) {
