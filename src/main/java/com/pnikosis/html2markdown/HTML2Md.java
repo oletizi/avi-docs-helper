@@ -286,7 +286,6 @@ public class HTML2Md {
   private static void pre(Element element, ArrayList<MDLine> lines) {
     element.removeAttr("crayon");
     lines.add(new MDLine(MDLineType.None, listDepth, ""));
-    System.out.println("FOUND PRE:\n" + element);
     passthrough(element, lines);
   }
 
@@ -414,7 +413,8 @@ public class HTML2Md {
   }
 
   private static void ol(Element element, ArrayList<MDLine> lines) {
-    list(element, lines, true);
+    // NOTE: The way ordered lists are used makes it impossible to convert to markdown
+    passthrough(element, lines);
   }
 
   private static void list(Element element, ArrayList<MDLine> lines, boolean isOrdered) {

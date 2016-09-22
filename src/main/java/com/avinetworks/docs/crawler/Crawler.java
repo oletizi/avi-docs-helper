@@ -196,7 +196,7 @@ public class Crawler extends WebCrawler {
     final String seedURL;
     final Filter filter;
     if (DEBUG) {
-      seedURL = "https://" + HOSTNAME + "/installing-avi-vantage-for-cisco-apic-16-2/";
+      seedURL = "https://" + HOSTNAME + "/mesos-in-aws-deploying-a-north-south-service/";
       filter = url -> seedURL.equals(url.getURL());
     } else {
       seedURL = "https://" + HOSTNAME + "/";
