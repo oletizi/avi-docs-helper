@@ -196,7 +196,7 @@ public class Crawler extends WebCrawler {
     final String seedURL;
     final Filter filter;
     if (DEBUG) {
-      seedURL = "https://" + HOSTNAME + "/connection-multiplex/";
+      seedURL = "https://" + HOSTNAME + "/installing-avi-vantage-for-cisco-apic-16-2/";
       filter = url -> seedURL.equals(url.getURL());
     } else {
       seedURL = "https://" + HOSTNAME + "/";

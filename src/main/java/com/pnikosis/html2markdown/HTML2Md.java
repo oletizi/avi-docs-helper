@@ -7,11 +7,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.parser.Tag;
-import org.jsoup.select.Elements;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
 import java.util.regex.Pattern;
@@ -237,7 +235,15 @@ public class HTML2Md {
   }
 
   private static void td(Element element, ArrayList<MDLine> lines) {
-    keepAndProcessChildren(element, lines, "<td>", "</td>");
+    String attributes = "";
+    if (element.hasAttr("rowspan")) {
+      attributes += " rowspan=\"" + element.attr("rowspan") + "\"";
+    }
+    if (element.hasAttr("colspan")) {
+      attributes += " colspan=\"" + element.attr("colspan") + "\"";
+    }
+    //keepAndProcessChildren(element, lines, "<td" + attributes +">", "</td>");
+    lines.add(new MDLine(MDLineType.None, indentation, "<td" + attributes + ">" + element.html() + "</td>"));
   }
 
   private static void tr(Element element, ArrayList<MDLine> lines) {
@@ -264,7 +270,8 @@ public class HTML2Md {
   }
 
   private static void figure(Element element, ArrayList<MDLine> lines) {
-    keepAndProcessChildren(element, lines, "<figure>", "</figure>");
+    String clazz = element.attr("class");
+    keepAndProcessChildren(element, lines, "<figure class=\"" + clazz + "\">", "</figure>");
   }
 
   private static void blockquote(Element element, ArrayList<MDLine> lines) {
@@ -284,7 +291,9 @@ public class HTML2Md {
   }
 
   private static void table(Element element, ArrayList<MDLine> lines) {
-    keepAndProcessChildren(element, lines, "<table class=\".table\">", "</table>");
+    String clazz = element.attr("class");
+    clazz += " table table-bordered table-hover";
+    keepAndProcessChildren(element, lines, "<table class=\"" + clazz + "\">", "</table>");
   }
 
   private static void passthrough(Element element, ArrayList<MDLine> lines) {
@@ -401,25 +410,26 @@ public class HTML2Md {
   }
 
   private static void ul(Element element, ArrayList<MDLine> lines) {
-    indentation++;
-    listDepth++;
-    orderedList = false;
-    for (Element child : element.children()) {
-      processElement(child, lines);
-    }
-    listDepth--;
-    indentation--;
+    list(element, lines, false);
   }
 
   private static void ol(Element element, ArrayList<MDLine> lines) {
-    indentation++;
-    listDepth++;
-    orderedList = true;
-    for (Element child : element.children()) {
-      processElement(child, lines);
+    list(element, lines, true);
+  }
+
+  private static void list(Element element, ArrayList<MDLine> lines, boolean isOrdered) {
+    if (element.hasAttr("class") && element.attr("class").contains("md-ignore")) {
+      passthrough(element, lines);
+    } else {
+      indentation++;
+      listDepth++;
+      orderedList = isOrdered;
+      for (Element child : element.children()) {
+        processElement(child, lines);
+      }
+      listDepth--;
+      indentation--;
     }
-    listDepth--;
-    indentation--;
   }
 
   private static void li(Element element, ArrayList<MDLine> lines) {
