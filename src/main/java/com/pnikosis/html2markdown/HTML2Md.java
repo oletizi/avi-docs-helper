@@ -223,7 +223,14 @@ public class HTML2Md {
   }
 
   private static void th(Element element, ArrayList<MDLine> lines) {
-    keepAndProcessChildren(element, lines, "<th>", "</th>");
+    String attributes = "";
+    if (element.hasAttr("rowspan")) {
+      attributes += " rowspan=\"" + element.attr("rowspan") + "\"";
+    }
+    if (element.hasAttr("colspan")) {
+      attributes += " colspan=\"" + element.attr("colspan") + "\"";
+    }
+    keepAndProcessChildren(element, lines, "<th" + attributes + ">", "</th>");
   }
 
   private static void tbody(Element element, ArrayList<MDLine> lines) {
@@ -414,6 +421,7 @@ public class HTML2Md {
 
   private static void ol(Element element, ArrayList<MDLine> lines) {
     // NOTE: The way ordered lists are used makes it impossible to convert to markdown
+    System.out.println("FOUND ORDERED LIST---> PASSTHROUGH!");
     passthrough(element, lines);
   }
 
