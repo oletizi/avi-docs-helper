@@ -30,7 +30,7 @@ public class Mover {
     this.redirectHandler = redirectHandler;
   }
 
-  File move(String source, String dest) throws IOException {
+  File move(String source, String dest, boolean doLog) throws IOException {
     final File sourceFile = new File(docroot, source);
     if (!sourceFile.exists()) {
       System.out.println("Source does not exist: " + sourceFile);
@@ -60,7 +60,9 @@ public class Mover {
 
     updateLinksTo(sourceFile, destFile);
     redirectHandler.notifyRedirect(sourceFile, destFile);
-    getMoveLog().logMove(source, dest);
+    if (doLog) {
+      getMoveLog().logMove(source, dest);
+    }
     return movedTo;
   }
 
@@ -120,7 +122,7 @@ public class Mover {
 
   void replay() throws IOException {
     for (MoveLog.MoveLogEntry entry : getMoveLog().getEntries()) {
-      move(entry.getSrc(), entry.getDest());
+      move(entry.getSrc(), entry.getDest(), false);
     }
   }
 
@@ -140,7 +142,7 @@ public class Mover {
       // create a new Mover and perform the move
       final String src = args[0];
       final String dest = args[1];
-      mover.move(src, dest);
+      mover.move(src, dest, true);
     }
   }
 

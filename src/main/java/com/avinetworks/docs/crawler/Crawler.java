@@ -27,7 +27,7 @@ import java.io.PrintWriter;
 import java.net.URL;
 
 public class Crawler extends WebCrawler {
-  private static final String HOSTNAME = "kbstage.avinetworks.com";
+  private static final String HOSTNAME = "kbdev.avinetworks.com";
   private static final Logger logger = LoggerFactory.getLogger(Crawler.class);
   private final File outputDir;
   private Filter filter;
@@ -176,7 +176,7 @@ public class Crawler extends WebCrawler {
   }
 
 
-  private static final boolean DEBUG = true;
+  private static final boolean DEBUG = false;
 
   public static void main(String[] args) throws Exception {
     String crawlStorageFolder = "/tmp/crawler/";
@@ -196,7 +196,7 @@ public class Crawler extends WebCrawler {
     final String seedURL;
     final Filter filter;
     if (DEBUG) {
-      seedURL = "https://" + HOSTNAME + "/vrf-support-for-vcenter-deployments/";
+      seedURL = "https://" + HOSTNAME + "/wildcard-sni-matching-for-virtual-hosting/";
       filter = url -> seedURL.equals(url.getURL());
     } else {
       seedURL = "https://" + HOSTNAME + "/";
