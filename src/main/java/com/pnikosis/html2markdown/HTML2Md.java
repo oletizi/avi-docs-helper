@@ -287,7 +287,7 @@ public class HTML2Md {
     text = text.replaceAll("</p>", "");
     text = text.replaceAll("<br>", "\n");
     text = Pattern.compile("^(.*)", Pattern.MULTILINE).matcher(text).replaceAll("> $1");
-    getLastLine(lines).append(text);
+    getLastLine(lines).append(text + "\n");
   }
 
   private static void pre(Element element, ArrayList<MDLine> lines) {

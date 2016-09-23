@@ -196,7 +196,7 @@ public class Crawler extends WebCrawler {
     final String seedURL;
     final Filter filter;
     if (DEBUG) {
-      seedURL = "https://" + HOSTNAME + "/vip-allocation-using-ipam-or-dns/ ";
+      seedURL = "https://" + HOSTNAME + "/vrf-support-for-vcenter-deployments/";
       filter = url -> seedURL.equals(url.getURL());
     } else {
       seedURL = "https://" + HOSTNAME + "/";
