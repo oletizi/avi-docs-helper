@@ -16,6 +16,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 
@@ -59,7 +60,8 @@ public class RendererTest {
     final CommandLine cmd = commands.get(0);
     verify(executor, times(1)).execute(cmd);
 
-    assertEquals("render.sh", cmd.getExecutable());
+    assertEquals(Renderer.SHELL, cmd.getExecutable());
+    assertArrayEquals(new String[] {Renderer.RENDER_COMMAND}, cmd.getArguments());
   }
 
   @Test
