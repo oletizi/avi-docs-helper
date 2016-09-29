@@ -36,6 +36,10 @@ public class PushHandler {
     return "Success!";
   }
 
+  private Object doPost() throws IOException {
+    return doGet();
+  }
+
   public static void main(String[] args) throws IOException {
     if (!OUTDIR.isDirectory()) {
       FileUtils.forceMkdir(OUTDIR);
@@ -47,6 +51,6 @@ public class PushHandler {
     //final Renderer renderer = new Renderer();
     final Pusher pusher = new Pusher();
     get("/helper/push", (req, res) -> new PushHandler(repo, pusher).doGet());
+    post("/helper/push", (req, res) -> new PushHandler(repo, pusher).doPost());
   }
-
 }
