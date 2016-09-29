@@ -17,12 +17,10 @@ public class PushHandler {
   private static final File OUTDIR = new File(System.getProperty("user.home"), ".avi-docs-repo");
   private static final Executor executor = Executors.newSingleThreadExecutor();
   private Repository repo;
-  private Renderer renderer;
   private Pusher pusher;
 
-  private PushHandler(final Repository repo, final Renderer renderer, Pusher pusher) {
+  private PushHandler(final Repository repo, Pusher pusher) {
     this.repo = repo;
-    this.renderer = renderer;
     this.pusher = pusher;
   }
 
@@ -30,7 +28,6 @@ public class PushHandler {
     executor.execute(() -> {
       try {
         repo.cloneOrPull();
-        renderer.execute();
         pusher.execute();
       } catch (IOException e) {
         e.printStackTrace();
@@ -47,9 +44,9 @@ public class PushHandler {
       }
     }
     final Repository repo = new Repository();
-    final Renderer renderer = new Renderer();
+    //final Renderer renderer = new Renderer();
     final Pusher pusher = new Pusher();
-    get("/helper/push", (req, res) -> new PushHandler(repo, renderer, pusher).doGet());
+    get("/helper/push", (req, res) -> new PushHandler(repo, pusher).doGet());
   }
 
 }
