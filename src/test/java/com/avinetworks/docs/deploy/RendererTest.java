@@ -1,7 +1,8 @@
-package com.avinetworks.docs.render;
+package com.avinetworks.docs.deploy;
 
+import com.avinetworks.docs.deploy.Renderer;
 import com.avinetworks.docs.exec.ExecutorFactory;
-import com.avinetworks.docs.repo.Repository;
+import com.avinetworks.docs.deploy.Repository;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.Executor;
@@ -25,18 +26,16 @@ public class RendererTest {
 
   @Rule
   public TemporaryFolder tmp = new TemporaryFolder();
-  private File repoDir;
   private ExecutorFactory execFactory;
   private Executor executor;
   private List<CommandLine> commands;
   private File binDir;
-  private File outdir;
 
   @Before
   public void before() throws Exception {
     commands = new ArrayList<>();
-    outdir = tmp.newFolder();
-    repoDir = new File(outdir, "avi-docs");
+    File outdir = tmp.newFolder();
+    File repoDir = new File(outdir, "avi-docs");
     binDir = new File(repoDir, "bin");
     execFactory = mock(ExecutorFactory.class);
     executor = mock(Executor.class);
@@ -51,7 +50,7 @@ public class RendererTest {
 
   @Test
   public void testRender() throws Exception {
-    renderer.render();
+    renderer.execute();
     verify(execFactory, times(1)).newExecutor();
     verify(executor, times(1)).setWorkingDirectory(binDir);
 
@@ -60,17 +59,15 @@ public class RendererTest {
     final CommandLine cmd = commands.get(0);
     verify(executor, times(1)).execute(cmd);
 
-    assertEquals(Renderer.SHELL, cmd.getExecutable());
-    assertArrayEquals(new String[] {Renderer.RENDER_COMMAND}, cmd.getArguments());
+    assertEquals("bash", cmd.getExecutable());
+    assertArrayEquals(new String[]{"render.sh"}, cmd.getArguments());
   }
 
   @Test
   @Ignore
   public void testRenderIT() throws Exception {
-    outdir = new File(System.getProperty("user.home"), ".avi-docs-repo");
-    repoDir = new File(outdir, "avi-docs");
-    new Repository("https://github.com/oletizi/avi-docs.git", outdir, DefaultExecutor::new).cloneOrPull();
-    renderer = new Renderer(repoDir, DefaultExecutor::new);
-    renderer.render();
+    new Repository().cloneOrPull();
+    renderer = new Renderer();
+    renderer.execute();
   }
 }

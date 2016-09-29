@@ -1,5 +1,6 @@
-package com.avinetworks.docs.repo;
+package com.avinetworks.docs.deploy;
 
+import com.avinetworks.docs.deploy.Repository;
 import com.avinetworks.docs.exec.ExecutorFactory;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;

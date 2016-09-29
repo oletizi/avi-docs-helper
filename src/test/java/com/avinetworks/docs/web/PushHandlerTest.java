@@ -22,7 +22,7 @@ public class PushHandlerTest {
     });
     runner.start();
     Thread.sleep(2000);
-    final HttpGet get = new HttpGet("http://localhost:4567/helper/push");
+    final HttpGet get = new HttpGet("http://localhost:4567/helper/execute");
     final CloseableHttpClient client = HttpClients.createDefault();
     client.execute(get);
   }
