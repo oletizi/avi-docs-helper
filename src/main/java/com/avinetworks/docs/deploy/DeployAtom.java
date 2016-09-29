@@ -9,20 +9,23 @@ import java.io.IOException;
 
 abstract class DeployAtom {
   private final String shell;
-  private final String command;
+  private final String[] args;
   private final ExecutorFactory execFactory;
   private final File workingDir;
 
-  DeployAtom(final String shell, final String command, final File workingDir, final ExecutorFactory execFactory) {
+  DeployAtom(final String shell, final String[] args, final File workingDir, final ExecutorFactory execFactory) {
     this.shell = shell;
-    this.command = command;
+    this.args = args;
     this.workingDir = workingDir;
     this.execFactory = execFactory;
   }
 
   public void execute() throws IOException {
     final CommandLine cmd = new CommandLine(shell);
-    cmd.addArgument(command);
+    for (String arg : args) {
+      cmd.addArgument(arg);
+    }
+
     final Executor executor = execFactory.newExecutor();
     executor.setWorkingDirectory(workingDir);
     System.out.println("Executing " + cmd);

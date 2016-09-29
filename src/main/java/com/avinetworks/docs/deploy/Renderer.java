@@ -12,6 +12,6 @@ public class Renderer extends DeployAtom {
   }
 
   Renderer(File repoDir, ExecutorFactory execFactory) {
-    super("bash", "render.sh", new File(repoDir, "bin"), execFactory);
+    super("bash", new String[]{"render.sh"}, new File(repoDir, "bin"), execFactory);
   }
 }

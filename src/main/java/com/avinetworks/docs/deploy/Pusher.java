@@ -12,7 +12,7 @@ public class Pusher extends DeployAtom {
   }
 
   public Pusher(final File repoDir, final ExecutorFactory execFactory) {
-    super("bash", "push.sh", new File(repoDir, "bin"), execFactory);
+    super("bash", new String[] {"push.sh", "local"}, new File(repoDir, "bin"), execFactory);
   }
 
 }
