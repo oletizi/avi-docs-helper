@@ -1,6 +1,5 @@
 package com.avinetworks.docs.structure;
 
-import com.avinetworks.docs.MarkdownCleaner;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;

@@ -1,6 +1,7 @@
 package com.avinetworks.docs.crawler;
 
 import com.avinetworks.docs.Server;
+import com.avinetworks.docs.content.MarkdownConverter;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
@@ -115,7 +116,7 @@ public class CrawlerTest {
 
 
     final File outDir = tmp.newFolder();
-    final Crawler crawler = new Crawler(filter, outDir);
+    final Crawler crawler = new Crawler(filter, outDir, new MarkdownConverter());
     CrawlConfig config = new CrawlConfig();
     config.setCrawlStorageFolder(tmp.newFolder().getAbsolutePath());
     PageFetcher pageFetcher = new PageFetcher(config);

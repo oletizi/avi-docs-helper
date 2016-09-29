@@ -1,6 +1,6 @@
 package com.avinetworks.docs.structure;
 
-import com.avinetworks.docs.MarkdownCleaner;
+import com.avinetworks.docs.content.MarkdownCleaner;
 import com.avinetworks.docs.structure.apache.ApacheRedirectHandler;
 import com.avinetworks.docs.structure.apache.ApacheRedirectFactoryAndParser;
 import org.apache.commons.io.FileUtils;
@@ -28,6 +28,10 @@ public class Mover {
     this.docroot = docroot;
     log = new MoveLog(new File(docroot, ".move.log"));
     this.redirectHandler = redirectHandler;
+  }
+
+  File move(String source, String dest) throws IOException {
+    return move(source, dest, true);
   }
 
   File move(String source, String dest, boolean doLog) throws IOException {

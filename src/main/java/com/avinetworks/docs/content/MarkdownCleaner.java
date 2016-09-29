@@ -1,4 +1,4 @@
-package com.avinetworks.docs;
+package com.avinetworks.docs.content;
 
 public class MarkdownCleaner {
   public String clean(String markdown) {
