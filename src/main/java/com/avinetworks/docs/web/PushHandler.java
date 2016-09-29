@@ -39,7 +39,7 @@ public class PushHandler {
     final Repository repo = new Repository();
     final Renderer renderer = new Renderer();
     final Pusher pusher = new Pusher();
-    get("/helper/execute", (req, res) -> new PushHandler(repo, renderer, pusher).doGet());
+    get("/helper/push", (req, res) -> new PushHandler(repo, renderer, pusher).doGet());
   }
 
 }
