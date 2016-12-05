@@ -18,7 +18,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class Crawler extends WebCrawler {
-  private static String HOSTNAME = "kbdev.avinetworks.com";
+  private static String HOSTNAME = "kb.avinetworks.com";
   private static final Logger logger = LoggerFactory.getLogger(Crawler.class);
   private final File outputDir;
   private ContentConverter converter;
@@ -110,7 +110,7 @@ public class Crawler extends WebCrawler {
          * Start the crawl. This is a blocking operation, meaning that your code
          * will reach the line after this only when crawling is finished.
          */
-    final File outputDir = new File("/Users/orion/work/workspace/avi-docs/src/site/");
+    final File outputDir = new File("/Users/orion/work/avi-docs/src/site/");
 
 
     controller.start(() -> {
