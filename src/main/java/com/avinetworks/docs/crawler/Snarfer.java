@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -21,8 +22,11 @@ import java.util.function.Consumer;
 public class Snarfer {
 
   public static void main(final String args[]) throws Exception {
-    final String snarfSpec = args[0];
-    final File outputDir = new File("/Users/orion/work/avi-docs/src/site/");
+    final File snarfSpec = new File(ClassLoader.getSystemResource("modified-posts.csv").getPath());
+
+    System.out.println("Snarf spec file: " + snarfSpec);
+
+    final File outputDir = new File("/Users/orion/work/avi-docs/src/site/docs/16.3-changes");
     final String crawlStorageFolder = "/tmp/crawler/";
     final CrawlController controller;
     final int numberOfCrawlers = 1;
@@ -40,7 +44,7 @@ public class Snarfer {
 
     final Set<String> urls = new HashSet<>();
 
-    final Reader reader = new FileReader(new File(snarfSpec));
+    final Reader reader = new FileReader(snarfSpec);
     final CSVParser parser = new CSVParser(reader, CSVFormat.EXCEL);
     parser.forEach(strings -> {
       System.out.println(strings.get(0));
