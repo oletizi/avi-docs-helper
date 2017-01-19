@@ -23,6 +23,8 @@ public class RepositoryCloneTest {
   private File cloneDir;
   private File testFile;
   private String branchName;
+  private String testContents;
+  private File clonedTestFile;
 
   @Before
   public void before() throws Exception {
@@ -34,7 +36,8 @@ public class RepositoryCloneTest {
 
     FileUtils.forceMkdir(repoDir);
     testFile = new File(repoDir, "test.txt");
-    FileUtils.writeStringToFile(testFile, "Hello, world!", "UTF-8");
+    testContents = "Hello, world!";
+    FileUtils.writeStringToFile(testFile, testContents, "UTF-8");
 
     int status = snarfAndWaitFor(new ProcessBuilder("git", "init").directory(repoDir));
     assertEquals("Failed to init repoDir: " + repoDir, 0, status);
@@ -53,17 +56,41 @@ public class RepositoryCloneTest {
 //
 //    status = snarfAndWaitFor(new ProcessBuilder("git", "commit", "-m", "created a nice branch.").directory(repoDir));
 //    assertEquals("Failed to check in the new branch: " + branchName + " in repo: " + repoDir, 0, status);
+    clonedTestFile = new File(cloneDir, testFile.getName());
   }
 
   @Test
   public void testClone() throws Exception {
-    final RepositoryClone clone = new RepositoryClone(repoUrl, cloneDir.getParentFile(), "clone", "branchA");
+    final RepositoryClone clone = new RepositoryClone(repoUrl, cloneDir.getParentFile(), "clone", branchName);
 
     assertFalse(cloneDir.exists());
     clone.cloneOrPull();
     assertTrue(cloneDir.exists());
-    final File clonedTestFile = new File(cloneDir, testFile.getName());
     assertTrue(clonedTestFile.isFile());
+
+    assertEquals(FileUtils.readFileToString(testFile, "UTF-8"), FileUtils.readFileToString(clonedTestFile, "UTF-8"));
+  }
+
+  @Test
+  public void testPull() throws Exception {
+    final RepositoryClone clone = new RepositoryClone(repoUrl, cloneDir.getParentFile(), "clone", "master");
+
+    assertFalse(cloneDir.exists());
+    clone.cloneOrPull();
+    assertTrue(cloneDir.exists());
+
+    assertEquals(testContents, FileUtils.readFileToString(clonedTestFile, "UTF-8"));
+    FileUtils.writeStringToFile(testFile, "changed", "UTF-8");
+
+    int status = snarfAndWaitFor(new ProcessBuilder("git", "add", ".").directory(repoDir));
+    assertEquals(0, status);
+
+    status = snarfAndWaitFor(new ProcessBuilder("git", "commit", "-m", "a nice change").directory(repoDir));
+    assertEquals(0, status);
+
+    assertNotEquals(FileUtils.readFileToString(testFile, "UTF-8"), FileUtils.readFileToString(clonedTestFile, "UTF-8"));
+
+    clone.cloneOrPull();
 
     assertEquals(FileUtils.readFileToString(testFile, "UTF-8"), FileUtils.readFileToString(clonedTestFile, "UTF-8"));
   }

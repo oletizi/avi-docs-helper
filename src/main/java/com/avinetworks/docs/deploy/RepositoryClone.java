@@ -37,7 +37,7 @@ public class RepositoryClone {
         throw new IOException("Unable to clone " + repoUrl + " to " + cloneDir);
       }
     }
-    status = snarfAndWaitFor(new ProcessBuilder("git", "checkout", "-b", branchName).directory(cloneDir));
+    status = snarfAndWaitFor(new ProcessBuilder("git", "checkout", branchName).directory(cloneDir));
     if (status != 0) {
       throw new IOException("Unable to checkout " + branchName + " in clone: " + cloneDir);
     }
