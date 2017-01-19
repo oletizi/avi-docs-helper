@@ -15,7 +15,7 @@ public class RepositoryClone {
   private final String branchName;
   private final File cloneDir;
 
-  RepositoryClone(final String repoUrl, File cloneParentDir, String cloneName, String branchName) {
+  public RepositoryClone(final String repoUrl, File cloneParentDir, String cloneName, String branchName) {
     this.repoUrl = repoUrl;
     this.cloneParentDir = cloneParentDir;
     this.cloneName = cloneName;
