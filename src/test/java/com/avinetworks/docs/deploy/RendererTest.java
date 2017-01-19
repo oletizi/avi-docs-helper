@@ -1,10 +1,7 @@
 package com.avinetworks.docs.deploy;
 
-import com.avinetworks.docs.deploy.Renderer;
 import com.avinetworks.docs.exec.ExecutorFactory;
-import com.avinetworks.docs.deploy.Repository;
 import org.apache.commons.exec.CommandLine;
-import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.Executor;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -66,8 +63,8 @@ public class RendererTest {
   @Test
   @Ignore
   public void testRenderIT() throws Exception {
-    new Repository().cloneOrPull();
-    renderer = new Renderer();
-    renderer.execute();
+    //new RepositoryClone().cloneOrPull();
+//    renderer = new Renderer();
+//    renderer.execute();
   }
 }

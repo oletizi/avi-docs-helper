@@ -8,9 +8,10 @@ public class PusherTest {
   @Test
   @Ignore
   public void pusherTestIT() throws Exception {
-    new Repository().cloneOrPull();
-    new Renderer().execute();
-    new Pusher().execute();
+    throw new RuntimeException("Implement Me!");
+    //new RepositoryClone().cloneOrPull();
+    //new Renderer().execute();
+    //new Pusher().execute();
   }
 
 }

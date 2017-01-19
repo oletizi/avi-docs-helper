@@ -7,11 +7,7 @@ import java.io.File;
 
 public class Pusher extends DeployAtom {
 
-  public Pusher() {
-    this(new File(Repository.DEFAULT_REPO_DIR, Repository.DEFAULT_REPO_NAME), DefaultExecutor::new);
-  }
-
-  public Pusher(final File repoDir, final ExecutorFactory execFactory) {
+  private Pusher(final File repoDir, final ExecutorFactory execFactory) {
     super("bash", new String[] {"push.sh", "local"}, new File(repoDir, "bin"), execFactory);
   }
 

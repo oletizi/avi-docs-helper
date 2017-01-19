@@ -1,25 +1,21 @@
 package com.avinetworks.docs.web;
 
 import com.avinetworks.docs.deploy.Pusher;
-import com.avinetworks.docs.deploy.Renderer;
-import com.avinetworks.docs.deploy.Repository;
-import org.apache.commons.io.FileUtils;
+import com.avinetworks.docs.deploy.RepositoryClone;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-
-import static spark.Spark.*;
 
 public class PushHandler {
-  private static final File OUTDIR = new File(System.getProperty("user.home"), ".avi-docs-repo");
   private static final Executor executor = Executors.newSingleThreadExecutor();
-  private Repository repo;
+  private RepositoryClone repo;
   private Pusher pusher;
 
-  private PushHandler(final Repository repo, Pusher pusher) {
+  private PushHandler(final RepositoryClone repo, Pusher pusher) {
     this.repo = repo;
     this.pusher = pusher;
   }
@@ -29,7 +25,7 @@ public class PushHandler {
       try {
         repo.cloneOrPull();
         pusher.execute();
-      } catch (IOException e) {
+      } catch (IOException | InterruptedException | URISyntaxException e) {
         e.printStackTrace();
       }
     });
@@ -41,16 +37,25 @@ public class PushHandler {
   }
 
   public static void main(String[] args) throws IOException {
-    if (!OUTDIR.isDirectory()) {
-      FileUtils.forceMkdir(OUTDIR);
-      if (!OUTDIR.isDirectory()) {
-        throw new RuntimeException("Can't create output directory: " + OUTDIR);
-      }
+    if (args.length == 0) {
+      System.out.println("Please specify a configuration path");
+      System.exit(-1);
     }
-    final Repository repo = new Repository();
+    final File configFile = new File(args[0]);
+    if (! configFile.isFile()) {
+      System.out.println("Please specify a path to a valid configuration file: " + configFile);
+      System.exit(-2);
+    }
+
+    ObjectMapper mapper = new ObjectMapper();
+
+    //final String repoUrl = (String) yaml.get("repo-url");
+    /*
+    final RepositoryClone repo = new RepositoryClone();
     //final Renderer renderer = new Renderer();
     final Pusher pusher = new Pusher();
     get("/helper/push", (req, res) -> new PushHandler(repo, pusher).doGet());
     post("/helper/push", (req, res) -> new PushHandler(repo, pusher).doPost());
+    */
   }
 }

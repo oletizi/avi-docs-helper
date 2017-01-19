@@ -47,6 +47,13 @@
   </build>
 
   <dependencies>
+    <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
+    <dependency>
+      <groupId>org.yaml</groupId>
+      <artifactId>snakeyaml</artifactId>
+      <version>1.17</version>
+    </dependency>
+
     <dependency>
       <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-exec -->
       <groupId>org.apache.commons</groupId>

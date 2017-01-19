@@ -92,7 +92,7 @@ public class Crawler extends WebCrawler {
     final Filter filter;
     if (DEBUG) {
       // http://localhost:4000/docs/latest/configuration-guide/operations/notifications/
-      seedURL = "https://" + HOSTNAME + "/avi-vantage-integration-with-safenet-network-hsm-16-2-2/";
+      seedURL = "https://" + HOSTNAME + "/preserve-client-ip/";
       filter = url -> seedURL.equals(url.getURL());
     } else {
       seedURL = "https://" + HOSTNAME + "/";
@@ -110,7 +110,7 @@ public class Crawler extends WebCrawler {
          * Start the crawl. This is a blocking operation, meaning that your code
          * will reach the line after this only when crawling is finished.
          */
-    final File outputDir = new File("/Users/orion/work/avi-docs/src/site/");
+    final File outputDir = new File("/Users/orion/work/avi-docs/src/site/docs/16.3/");
 
 
     controller.start(() -> {
