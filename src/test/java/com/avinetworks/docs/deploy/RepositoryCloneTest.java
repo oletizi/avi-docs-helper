@@ -1,16 +1,13 @@
 package com.avinetworks.docs.deploy;
 
+import com.avinetworks.docs.exec.ProcessHelper;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 
 import static org.junit.Assert.*;
 
@@ -25,6 +22,7 @@ public class RepositoryCloneTest {
   private String branchName;
   private String testContents;
   private File clonedTestFile;
+  private File pushDirectory;
 
   @Before
   public void before() throws Exception {
@@ -39,29 +37,32 @@ public class RepositoryCloneTest {
     testContents = "Hello, world!";
     FileUtils.writeStringToFile(testFile, testContents, "UTF-8");
 
-    int status = snarfAndWaitFor(new ProcessBuilder("git", "init").directory(repoDir));
+    int status = new ProcessHelper("git", "init").directory(repoDir).execute();
     assertEquals("Failed to init repoDir: " + repoDir, 0, status);
 
-    status = snarfAndWaitFor(new ProcessBuilder("git", "add", ".").directory(repoDir));
+    status = new ProcessHelper("git", "add", ".").directory(repoDir).execute();
     assertEquals("Failed to add files to repoDir: " + repoDir, 0, status);
 
-    status = snarfAndWaitFor(new ProcessBuilder("git", "commit", "-m", "initial commit").directory(repoDir));
+    status = new ProcessHelper("git", "commit", "-m", "initial commit").directory(repoDir).execute();
     assertEquals("Failed to commit to repoDir: " + repoDir, 0, status);
 
-    status = snarfAndWaitFor(new ProcessBuilder("git", "branch", branchName).directory(repoDir));
+    status = new ProcessHelper("git", "branch", branchName).directory(repoDir).execute();
     assertEquals("Failed to create branch: " + branchName + " in repo: " + repoDir, 0, status);
 
-//    status = snarfAndWaitFor(new ProcessBuilder("git", "add", ".").directory(repoDir));
+    new ProcessHelper("git", "branch").directory(repoDir).execute();
+
+//    status = execute(new ProcessBuilder("git", "add", ".").directory(repoDir));
 //    assertEquals("Unable to add before commit", 0, status);
 //
-//    status = snarfAndWaitFor(new ProcessBuilder("git", "commit", "-m", "created a nice branch.").directory(repoDir));
+//    status = execute(new ProcessBuilder("git", "commit", "-m", "created a nice branch.").directory(repoDir));
 //    assertEquals("Failed to check in the new branch: " + branchName + " in repo: " + repoDir, 0, status);
     clonedTestFile = new File(cloneDir, testFile.getName());
+    pushDirectory = tmp.newFolder();
   }
 
   @Test
   public void testClone() throws Exception {
-    final RepositoryClone clone = new RepositoryClone(repoUrl, cloneDir.getParentFile(), "clone", branchName);
+    final RepositoryClone clone = new RepositoryClone(repoUrl, cloneDir.getParentFile(), "clone", branchName, pushDirectory);
 
     assertFalse(cloneDir.exists());
     clone.cloneOrPull();
@@ -73,7 +74,7 @@ public class RepositoryCloneTest {
 
   @Test
   public void testPull() throws Exception {
-    final RepositoryClone clone = new RepositoryClone(repoUrl, cloneDir.getParentFile(), "clone", "master");
+    final RepositoryClone clone = new RepositoryClone(repoUrl, cloneDir.getParentFile(), "clone", "master", pushDirectory);
 
     assertFalse(cloneDir.exists());
     clone.cloneOrPull();
@@ -82,10 +83,10 @@ public class RepositoryCloneTest {
     assertEquals(testContents, FileUtils.readFileToString(clonedTestFile, "UTF-8"));
     FileUtils.writeStringToFile(testFile, "changed", "UTF-8");
 
-    int status = snarfAndWaitFor(new ProcessBuilder("git", "add", ".").directory(repoDir));
+    int status = new ProcessHelper("git", "add", ".").directory(repoDir).execute();
     assertEquals(0, status);
 
-    status = snarfAndWaitFor(new ProcessBuilder("git", "commit", "-m", "a nice change").directory(repoDir));
+    status = new ProcessHelper("git", "commit", "-m", "a nice change").directory(repoDir).execute();
     assertEquals(0, status);
 
     assertNotEquals(FileUtils.readFileToString(testFile, "UTF-8"), FileUtils.readFileToString(clonedTestFile, "UTF-8"));
@@ -95,19 +96,6 @@ public class RepositoryCloneTest {
     assertEquals(FileUtils.readFileToString(testFile, "UTF-8"), FileUtils.readFileToString(clonedTestFile, "UTF-8"));
   }
 
-  private int snarfAndWaitFor(final ProcessBuilder pb) throws Exception {
 
-    System.out.println("=======================");
-    System.out.println("Working dir: " + pb.directory());
-    System.out.println("Executing " + StringUtils.join(pb.command(), " "));
-    final Process proc = pb.start();
-    for (String line : IOUtils.readLines(proc.getInputStream(), "UTF-8")) {
-      System.out.println(line);
-    }
-    for (String line : IOUtils.readLines(proc.getErrorStream(), "UTF-8")) {
-      System.err.println(line);
-    }
-    return proc.waitFor();
-  }
 
 }

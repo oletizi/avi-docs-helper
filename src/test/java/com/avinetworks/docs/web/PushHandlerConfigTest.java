@@ -22,14 +22,14 @@ public class PushHandlerConfigTest {
     PushHandlerConfig.Clone clone = new PushHandlerConfig.Clone();
     clone.setBranch("branch");
     clone.setParentDirectory("parentDir");
-    clone.setCloneDirectory("cloneDir");
+    clone.setCloneName("cloneDir");
 
     cfg.addClone(clone);
 
     clone = new PushHandlerConfig.Clone();
     clone.setBranch("branchB");
     clone.setParentDirectory("clone2parentDir");
-    clone.setCloneDirectory("clone2Dir");
+    clone.setCloneName("clone2Dir");
 
     cfg.addClone(clone);
 

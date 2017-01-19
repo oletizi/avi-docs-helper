@@ -1,14 +1,12 @@
 package com.avinetworks.docs.deploy;
 
-import com.avinetworks.docs.exec.ExecutorFactory;
-import org.apache.commons.exec.DefaultExecutor;
+import org.apache.commons.exec.Executor;
 
 import java.io.File;
 
 public class Pusher extends DeployAtom {
 
-  private Pusher(final File repoDir, final ExecutorFactory execFactory) {
-    super("bash", new String[] {"push.sh", "local"}, new File(repoDir, "bin"), execFactory);
+  public Pusher(final File repoDir, final File dest, final Executor executor) {
+    super("bash", new String[] {"push.sh", dest.getAbsolutePath()}, new File(repoDir, "bin"), executor);
   }
-
 }

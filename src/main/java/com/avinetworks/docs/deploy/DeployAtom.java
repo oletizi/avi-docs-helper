@@ -1,6 +1,5 @@
 package com.avinetworks.docs.deploy;
 
-import com.avinetworks.docs.exec.ExecutorFactory;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.Executor;
 
@@ -10,14 +9,14 @@ import java.io.IOException;
 abstract class DeployAtom {
   private final String shell;
   private final String[] args;
-  private final ExecutorFactory execFactory;
   private final File workingDir;
+  private final Executor executor;
 
-  DeployAtom(final String shell, final String[] args, final File workingDir, final ExecutorFactory execFactory) {
+  DeployAtom(final String shell, final String[] args, final File workingDir, final Executor executor) {
     this.shell = shell;
     this.args = args;
     this.workingDir = workingDir;
-    this.execFactory = execFactory;
+    this.executor = executor;
   }
 
   public void execute() throws IOException {
@@ -25,8 +24,6 @@ abstract class DeployAtom {
     for (String arg : args) {
       cmd.addArgument(arg);
     }
-
-    final Executor executor = execFactory.newExecutor();
     executor.setWorkingDirectory(workingDir);
     System.out.println("Executing " + cmd);
     System.out.println("Working dir: " + executor.getWorkingDirectory());

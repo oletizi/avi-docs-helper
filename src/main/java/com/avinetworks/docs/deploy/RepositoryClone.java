@@ -1,5 +1,8 @@
 package com.avinetworks.docs.deploy;
 
+import com.avinetworks.docs.exec.ProcessHelper;
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.Executor;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -13,31 +16,37 @@ public class RepositoryClone {
   private final File cloneParentDir;
   private final String cloneName;
   private final String branchName;
+  private final File pushDestination;
   private final File cloneDir;
 
-  public RepositoryClone(final String repoUrl, File cloneParentDir, String cloneName, String branchName) {
+  public RepositoryClone(final String repoUrl, final File cloneParentDir, final String cloneName, final String branchName,
+                         final File pushDestination) {
     this.repoUrl = repoUrl;
     this.cloneParentDir = cloneParentDir;
     this.cloneName = cloneName;
     this.branchName = branchName;
+    this.pushDestination = pushDestination;
     this.cloneDir = new File(cloneParentDir, cloneName);
   }
 
   public void cloneOrPull() throws IOException, InterruptedException, URISyntaxException {
     int status = -1;
     if (cloneDir.exists()) {
-      status = snarfAndWaitFor(new ProcessBuilder("git", "pull").directory(cloneDir));
+      status = new ProcessHelper("git pull").directory(cloneDir).execute();
       if (status != 0) {
         throw new IOException("Unable to pull from " + repoUrl);
       }
     } else {
       // do a clone
-      status = snarfAndWaitFor(new ProcessBuilder("git", "clone", repoUrl, cloneName).directory(cloneParentDir));
+      status = new ProcessHelper("git clone", repoUrl, cloneName).directory(cloneParentDir).execute();
       if (status != 0) {
         throw new IOException("Unable to clone " + repoUrl + " to " + cloneDir);
       }
     }
-    status = snarfAndWaitFor(new ProcessBuilder("git", "checkout", branchName).directory(cloneDir));
+
+    new ProcessHelper("ls", "-l").directory(cloneParentDir).execute();
+
+    status = new ProcessHelper("git checkout ", branchName).directory(cloneDir).execute();
     if (status != 0) {
       throw new IOException("Unable to checkout " + branchName + " in clone: " + cloneDir);
     }
@@ -55,5 +64,13 @@ public class RepositoryClone {
       System.err.println(line);
     }
     return proc.waitFor();
+  }
+
+  public File getCloneDirectory() {
+    return cloneDir;
+  }
+
+  public File getPushDestination() {
+    return pushDestination;
   }
 }

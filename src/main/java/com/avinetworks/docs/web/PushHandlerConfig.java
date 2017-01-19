@@ -1,5 +1,6 @@
 package com.avinetworks.docs.web;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,8 @@ public class PushHandlerConfig {
   public static final class Clone {
     private String branch;
     private String parentDirectory;
-    private String cloneDirectory;
+    private String cloneName;
+    private String pushDirectory;
 
     public String getBranch() {
       return branch;
@@ -53,12 +55,24 @@ public class PushHandlerConfig {
       this.parentDirectory = parentDirectory;
     }
 
-    public void setCloneDirectory(String cloneDirectory) {
-      this.cloneDirectory = cloneDirectory;
+    /**
+     * Sets name of the directory the repository will be cloned into inside the parent directory
+     * @param cloneName
+     */
+    public void setCloneName(String cloneName) {
+      this.cloneName = cloneName;
     }
 
-    public String getCloneDirectory() {
-      return cloneDirectory;
+    public String getCloneName() {
+      return cloneName;
+    }
+
+    public File getPushDirectory() {
+      return new File(pushDirectory);
+    }
+
+    public void setPushDirectory(File pushDirectory) {
+      this.pushDirectory = pushDirectory.getAbsolutePath();
     }
   }
 }
