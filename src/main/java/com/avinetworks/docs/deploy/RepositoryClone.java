@@ -3,6 +3,7 @@ package com.avinetworks.docs.deploy;
 import com.avinetworks.docs.exec.ProcessHelper;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.Executor;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -38,6 +39,7 @@ public class RepositoryClone {
       }
     } else {
       // do a clone
+      FileUtils.forceMkdir(cloneParentDir);
       status = new ProcessHelper("git clone", repoUrl, cloneName).directory(cloneParentDir).execute();
       if (status != 0) {
         throw new IOException("Unable to clone " + repoUrl + " to " + cloneDir);

@@ -2,7 +2,10 @@ package com.avinetworks.docs.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+
+import java.io.File;
 
 import static org.junit.Assert.*;
 
@@ -40,6 +43,31 @@ public class PushHandlerConfigTest {
     assertEquals(cfg.getRepoUrl(), readConfig.getRepoUrl());
     assertEquals(cfg.getClones().size(), readConfig.getClones().size());
     assertEquals(out, mapper.writerWithDefaultPrettyPrinter().writeValueAsString(readConfig));
+  }
+
+  @Test
+  @Ignore
+  public void createConfig() throws Exception {
+    final PushHandlerConfig cfg = new PushHandlerConfig();
+    cfg.setRepoUrl("git@github.com:oletizi/avi-docs.git");
+
+    final PushHandlerConfig.Clone cloneMaster = new PushHandlerConfig.Clone();
+    cloneMaster.setBranch("master");
+    cloneMaster.setParentDirectory("/var/docs/");
+    cloneMaster.setCloneName("avi-docs-master");
+    cloneMaster.setPushDirectory(new File("/var/www/avi-docs-master/"));
+    cfg.addClone(cloneMaster);
+
+    final PushHandlerConfig.Clone clone17_1 = new PushHandlerConfig.Clone();
+    clone17_1.setBranch("17.1");
+    clone17_1.setParentDirectory("/var/docs/");
+    clone17_1.setCloneName("avi-docs-17.1");
+    clone17_1.setPushDirectory(new File("/var/www/avi-docs-17.1"));
+    cfg.addClone(clone17_1);
+
+    final String out = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(cfg);
+    System.out.println(out);
+
   }
 
 }
