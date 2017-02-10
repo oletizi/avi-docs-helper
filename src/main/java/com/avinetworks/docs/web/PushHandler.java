@@ -56,14 +56,14 @@ public class PushHandler {
 
     final ObjectMapper mapper = new ObjectMapper();
     final PushHandlerConfig cfg = mapper.readValue(configFile, PushHandlerConfig.class);
-
     final List<RepositoryClone> clones = new ArrayList<>();
 
-    for (PushHandlerConfig.Clone cloneCfg : cfg.getClones()) {
-      clones.add(new RepositoryClone(cfg.getRepoUrl(), new File(cloneCfg.getParentDirectory()),
-          cloneCfg.getCloneName(), cloneCfg.getBranch(), cloneCfg.getPushDirectory()));
+    for (PushHandlerConfig.Repository repo : cfg.getRepos()) {
+      for (PushHandlerConfig.Clone clone : repo.getClones()) {
+        clones.add(new RepositoryClone(repo.getRepoUrl(), new File(clone.getParentDirectory()),
+            clone.getCloneName(), clone.getBranch(), clone.getPushDirectory()));
+      }
     }
-
     get("/helper/push", (req, res) -> new PushHandler(clones).doGet());
     post("/helper/push", (req, res) -> new PushHandler(clones).doPost());
 

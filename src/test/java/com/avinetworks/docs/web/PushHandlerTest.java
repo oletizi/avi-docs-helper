@@ -69,14 +69,16 @@ public class PushHandlerTest {
     new ProcessHelper("git", "branch").directory(repoDir).execute();
 
     final PushHandlerConfig cfg = new PushHandlerConfig();
-    cfg.setRepoUrl(repoUrl);
+    PushHandlerConfig.Repository repo = new PushHandlerConfig.Repository();
+    cfg.getRepos().add(repo);
+    repo.setRepoUrl(repoUrl);
     PushHandlerConfig.Clone clone = new PushHandlerConfig.Clone();
     clone.setBranch(branchA.getName());
     clone.setParentDirectory(branchA.getParent());
     clone.setCloneName(branchA.getName());
     clone.setPushDirectory(branchADest);
 
-    cfg.addClone(clone);
+    repo.getClones().add(clone);
     mapper.writeValue(configFile, cfg);
   }
 

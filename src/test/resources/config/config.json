@@ -1,0 +1,38 @@
+{
+  "repos": [
+    {
+      "repoUrl": "/Users/orion/work/avi-docs/",
+      "clones": [
+        {
+          "branch": "master",
+          "parentDirectory": "/Users/orion/.avi-docs/repo/",
+          "cloneName": "avi-docs-master",
+          "pushDirectory": "/Users/orion/.avi-docs/site/avi-docs-master"
+        },
+        {
+          "branch": "17.1",
+          "parentDirectory": "/Users/orion/.avi-docs/repo/",
+          "cloneName": "avi-docs-17.1",
+          "pushDirectory": "/Users/orion/.avi-docs/site/avi-docs-17.1"
+        }
+      ]
+    },
+    {
+      "repoUrl": "git@github.com:oletizi/avi-docs-content.git",
+      "clones": [
+        {
+          "branch": "17.1",
+          "parentDirectory": "/Users/orion/.avi-docs/repo/",
+          "cloneName": "avi-docs-content-16.3",
+          "pushDirectory": "/dev/null"
+        },
+        {
+          "branch": "16.3",
+          "parentDirectory": "/Users/orion/.avi-docs/repo/",
+          "cloneName": "avi-docs-content-17.3",
+          "pushDirectory": "/dev/null"
+        }
+      ]
+    }
+  ]
+}

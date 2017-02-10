@@ -26,7 +26,7 @@ public class Snarfer {
 
     System.out.println("Snarf spec file: " + snarfSpec);
 
-    final File outputDir = new File("/Users/orion/work/avi-docs/src/site/docs/16.3-changes");
+    final File outputDir = new File("/Users/orion/work/avi-docs/src/site/docs/17.1-changes");
     final String crawlStorageFolder = "/tmp/crawler/";
     final CrawlController controller;
     final int numberOfCrawlers = 1;

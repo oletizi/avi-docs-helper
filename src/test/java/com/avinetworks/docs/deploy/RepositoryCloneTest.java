@@ -3,6 +3,7 @@ package com.avinetworks.docs.deploy;
 import com.avinetworks.docs.exec.ProcessHelper;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -61,6 +62,7 @@ public class RepositoryCloneTest {
   }
 
   @Test
+  @Ignore
   public void testClone() throws Exception {
     final RepositoryClone clone = new RepositoryClone(repoUrl, cloneDir.getParentFile(), "clone", branchName, pushDirectory);
 
@@ -73,6 +75,7 @@ public class RepositoryCloneTest {
   }
 
   @Test
+  @Ignore
   public void testPull() throws Exception {
     final RepositoryClone clone = new RepositoryClone(repoUrl, cloneDir.getParentFile(), "clone", "master", pushDirectory);
 

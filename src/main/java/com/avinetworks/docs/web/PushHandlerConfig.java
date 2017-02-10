@@ -5,32 +5,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PushHandlerConfig {
-  private String repoUrl;
-  private List<Clone> clones;
+  private List<Repository> repos = new ArrayList<>();
 
-  public PushHandlerConfig() {
-    clones = new ArrayList<>();
+  public List<Repository> getRepos() {
+    return repos;
   }
 
-  public String getRepoUrl() {
-    return repoUrl;
+  public void setRepos(List<Repository> repos) {
+    this.repos = repos;
   }
 
-  public void setRepoUrl(String repoUrl) {
-    this.repoUrl = repoUrl;
-  }
+  public static final class Repository {
+    private String repoUrl;
+    private List<Clone> clones = new ArrayList<>();
 
-  public List<Clone> getClones() {
-    return clones;
-  }
+    public String getRepoUrl() {
+      return repoUrl;
+    }
 
-  public void setClones(List<Clone> clones) {
-    this.clones.clear();
-    this.clones.addAll(clones);
-  }
+    public void setRepoUrl(String repoUrl) {
+      this.repoUrl = repoUrl;
+    }
 
-  public void addClone(Clone clone) {
-    this.clones.add(clone);
+    public List<Clone> getClones() {
+      return clones;
+    }
+
+    public void setClones(List<Clone> clones) {
+      this.clones = clones;
+    }
   }
 
   public static final class Clone {
