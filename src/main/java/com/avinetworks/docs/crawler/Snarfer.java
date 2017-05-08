@@ -37,7 +37,7 @@ public class Snarfer {
         /*
          * Instantiate the controller for this crawl.
          */
-    final PageFetcher pageFetcher = new PageFetcher(config);
+    final PageFetcher pageFetcher = new PageFetcher(config);//new PermissiveSSLPageFetcher(config);
     final RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
     final RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
     controller = new CrawlController(config, pageFetcher, robotstxtServer);
@@ -48,7 +48,7 @@ public class Snarfer {
     final CSVParser parser = new CSVParser(reader, CSVFormat.EXCEL);
     parser.forEach(strings -> {
       System.out.println(strings.get(0));
-      final String seedURL = "https://kb.avinetworks.com/" + strings.get(0) + "/";
+      final String seedURL = "https://kbstage.avinetworks.com/" + strings.get(0) + "/";
       urls.add(seedURL);
       try {
         controller.addSeed(seedURL);

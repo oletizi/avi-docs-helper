@@ -82,7 +82,7 @@ public class MarkdownConverter implements ContentConverter {
         final File imgDir = new File(outDir, "img");
         FileUtils.forceMkdir(imgDir);
         final String filename = FilenameUtils.getName(src);
-        final URL url = new URL("https://kb.avinetworks.com" + src);
+        final URL url = new URL("https://kbstage.avinetworks.com" + src);
         File outFile = new File(imgDir, filename);
         info("  Snarfing image " + url + " to " + outFile);
         FileUtils.copyURLToFile(url, outFile);
